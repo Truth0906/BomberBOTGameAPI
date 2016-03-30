@@ -1,4 +1,4 @@
-package main;
+package BomberGameBOTAPI;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,18 +14,17 @@ import javax.net.SocketFactory;
 
 import ObjectStructure.BitFlag;
 import ObjectStructure.Message;
+import SocketServer.Center;
 import Tool.ErrorCode;
 import Tool.ST;
 
 public class BomberGameBOTAPI {
 	
-	public static String version = "1.0.160320";
+	public static final String version = "1.0.160320";
 	
 	private BufferedWriter Writer;
 	private BufferedReader Reader;
 	private Socket Client;
-	private String ServerIP = "127.0.0.1";
-	private int PortList[] = {52013, 52014, 53013, 53014};
 
 	private int map[][];
 	private Message LastMessage;
@@ -193,18 +192,18 @@ public class BomberGameBOTAPI {
 	} 
 	private boolean connect(){
 		
-		for(int i = 0 ; i < PortList.length ; i++){
+		for(int i = 0 ; i < Options.PortList.length ; i++){
 			
 //			ST.showOnScreen(LogName, "Connect to port " + PortList[i]);
 		    try{
 		    	Client = SocketFactory.getDefault().createSocket();
-		    	InetSocketAddress remoteaddr = new InetSocketAddress(ServerIP, PortList[i]);
+		    	InetSocketAddress remoteaddr = new InetSocketAddress(Options.ServerIP, Options.PortList[i]);
 		    	Client.connect(remoteaddr, 2000);
 		    	Reader = new BufferedReader(new InputStreamReader(Client.getInputStream(), "UTF-8"));
 		    	Writer = new BufferedWriter(new OutputStreamWriter(Client.getOutputStream(), "UTF-8"));
 		    }
 		    catch (IOException e){
-		    	ST.showOnScreen(LogName, "Connect prot " + PortList[i] + " time out");
+		    	ST.showOnScreen(LogName, "Connect prot " + Options.PortList[i] + " time out");
 		    	continue;
 		    }
 		    break;
