@@ -12,11 +12,11 @@ import java.nio.charset.Charset;
 
 import javax.net.SocketFactory;
 
-import ObjectStructure.BitFlag;
-import ObjectStructure.Message;
-import SocketServer.Center;
-import Tool.ErrorCode;
-import Tool.ST;
+import APIObjectStructure.APICenter;
+import APITool.APITool;
+import ServerObjectStructure.BitFlag;
+import ServerObjectStructure.Message;
+import ServerTool.ErrorCode;
 
 public class BomberGameBOTAPI {
 	
@@ -30,11 +30,12 @@ public class BomberGameBOTAPI {
 	private Message LastMessage;
 	
 	private String LogName = "TestAPI";
-	  
+	
 	public BomberGameBOTAPI(){
 	    Writer = null;
 	    Reader = null;
 	    Client = null;
+	    new APICenter();
 	}
 	
 	
@@ -131,9 +132,9 @@ public class BomberGameBOTAPI {
 	    for(int y = 0 ; y < map.length ; y++){
 			for(int x = 0 ; x < map[0].length ; x++){
 				
-				if(ST.CompareBitFlag(map[y][x], BitFlag.PlayerA))			System.out.print(PA);
-				else if(ST.CompareBitFlag(map[y][x], BitFlag.PlayerB)) 		System.out.print(PB);
-				else if(ST.CompareBitFlag(map[y][x], BitFlag.Bomb_Type)) 	System.out.print(Bomb);
+				if(APITool.CompareBitFlag(map[y][x], BitFlag.PlayerA))			System.out.print(PA);
+				else if(APITool.CompareBitFlag(map[y][x], BitFlag.PlayerB)) 		System.out.print(PB);
+				else if(APITool.CompareBitFlag(map[y][x], BitFlag.Bomb_Type)) 	System.out.print(Bomb);
 				else if((map[y][x] & 0xF) == 0x1)	System.out.print(Number[1]);
 				else if((map[y][x] & 0xF) == 0x2)	System.out.print(Number[2]);
 				else if((map[y][x] & 0xF) == 0x3)	System.out.print(Number[3]);
@@ -142,8 +143,8 @@ public class BomberGameBOTAPI {
 				else if((map[y][x] & 0xF) == 0x6)	System.out.print(Number[6]);
 				else if((map[y][x] & 0xF) == 0x7)	System.out.print(Number[7]);
 				else if((map[y][x] & 0xF) == 0x8)	System.out.print(Number[8]);
-				else if(ST.CompareBitFlag(map[y][x], BitFlag.Path_Type)) 	System.out.print(Path);
-				else if(ST.CompareBitFlag(map[y][x], BitFlag.Wall_Type)) 	System.out.print(Wall);
+				else if(APITool.CompareBitFlag(map[y][x], BitFlag.Path_Type)) 	System.out.print(Path);
+				else if(APITool.CompareBitFlag(map[y][x], BitFlag.Wall_Type)) 	System.out.print(Wall);
 				else System.out.print(Wall);
 				
 			}
@@ -172,7 +173,7 @@ public class BomberGameBOTAPI {
 	private void ParseMap(){
 		String temp = LastMessage.getMsg(Message.Map);
 		if(temp == null){
-			ST.showOnScreen("BomberGameBOTAPI", "Error null map");
+			APITool.showOnScreen("BomberGameBOTAPI", "Error null map");
 			LastMessage.setMsg(Message.ErrorCode, ErrorCode.GenernalError);
 			return;
 		}
@@ -192,18 +193,18 @@ public class BomberGameBOTAPI {
 	} 
 	private boolean connect(){
 		
-		for(int i = 0 ; i < Options.PortList.length ; i++){
+		for(int i = 0 ; i < APIOptions.PortList.length ; i++){
 			
 //			ST.showOnScreen(LogName, "Connect to port " + PortList[i]);
 		    try{
 		    	Client = SocketFactory.getDefault().createSocket();
-		    	InetSocketAddress remoteaddr = new InetSocketAddress(Options.ServerIP, Options.PortList[i]);
+		    	InetSocketAddress remoteaddr = new InetSocketAddress(APIOptions.ServerIP, APIOptions.PortList[i]);
 		    	Client.connect(remoteaddr, 2000);
 		    	Reader = new BufferedReader(new InputStreamReader(Client.getInputStream(), "UTF-8"));
 		    	Writer = new BufferedWriter(new OutputStreamWriter(Client.getOutputStream(), "UTF-8"));
 		    }
 		    catch (IOException e){
-		    	ST.showOnScreen(LogName, "Connect prot " + Options.PortList[i] + " time out");
+		    	APITool.showOnScreen(LogName, "Connect prot " + APIOptions.PortList[i] + " time out");
 		    	continue;
 		    }
 		    break;
@@ -213,15 +214,15 @@ public class BomberGameBOTAPI {
 	}
 	private boolean sendMsg(Message inputMsg){
 		
-		String Msg = ST.MessageToString(inputMsg);
+		String Msg = APITool.MessageToString(inputMsg);
 		try {
 			Writer.write(Msg + "\r\n");
 			Writer.flush();
-			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
 		}
+		return true;
 	}
 	private Message receiveMsg(){
 		Message resultMsg = null;
@@ -230,7 +231,7 @@ public class BomberGameBOTAPI {
 		try {
 			
 			receivedString = Reader.readLine();
-			resultMsg = ST.StringToMessage(receivedString);
+			resultMsg = APITool.StringToMessage(receivedString);
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

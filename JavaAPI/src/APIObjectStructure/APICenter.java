@@ -1,4 +1,4 @@
-package ObjectStructure;
+package APIObjectStructure;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -7,13 +7,16 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import BomberGameBOTAPI.Options;
-import bin.Tool.ServerTool;
+import APITool.APITool;
+import BomberGameBOTAPI.APIOptions;
 
-public class Center {
+public class APICenter {
 	
 	private static String LogName = "Center";
 	
+	public APICenter(){
+		readOptions();
+	}
 	private void writeOptions(){
 		
 		File OptionFile = null;
@@ -21,19 +24,19 @@ public class Center {
 		try {
 			OptionFile = new File("Option");
 			if(! OptionFile.exists()){
-				ServerTool.showOnScreen(LogName, "Find Option file fail, create new one");
+				APITool.showOnScreen(LogName, "Find Option file fail, create new one");
 				OptionFile.createNewFile();
 			}
 		} catch (IOException e) {
-			ServerTool.showOnScreen(LogName, "Error! create new Option file fails");
+			APITool.showOnScreen(LogName, "Error! create new Option file fails");
 			return;
 		}
 		
 		try(BufferedWriter Writer = new BufferedWriter(new FileWriter(OptionFile))) {
 			
-			Options temp = new Options();
+			APIOptions temp = new APIOptions();
 			
-			String OptionString = ServerTool.OptionToString(temp);
+			String OptionString = APITool.OptionToString(temp);
 			
 			OptionString = OptionString.replaceAll("\\{", "\\{" + System.lineSeparator() + "\t");
 			OptionString = OptionString.replaceAll(",\"", "," + System.lineSeparator() + "\t\"");
@@ -44,10 +47,10 @@ public class Center {
 			Writer.close();
 		    
 		} catch (IOException e) {
-			ServerTool.showOnScreen(LogName, "Error! write Option file fails");
+			APITool.showOnScreen(LogName, "Error! write Option file fails");
 			return;
 		}
-		ServerTool.showOnScreen(LogName, "Write Option file success");
+		APITool.showOnScreen(LogName, "Write Option file success");
 	}
 	public void readOptions(){
 		
@@ -66,7 +69,7 @@ public class Center {
 			writeOptions();
 		}
 				
-		ServerTool.StringToOption(OptionString);
+		APITool.StringToOption(OptionString);
 		writeOptions();
 		
 	}

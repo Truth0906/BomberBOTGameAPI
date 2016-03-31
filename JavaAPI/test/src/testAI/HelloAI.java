@@ -2,10 +2,12 @@ package testAI;
 
 import java.security.SecureRandom;
 
-import ObjectStructure.BitFlag;
-import Tool.ErrorCode;
-import Tool.ST;
-import main.BomberGameBOTAPI;
+import APITool.APITool;
+import BomberGameBOTAPI.BomberGameBOTAPI;
+import ServerObjectStructure.BitFlag;
+import ServerTool.ErrorCode;
+
+
 public class HelloAI {
 	
 	public static void main(String[] args) {
@@ -18,8 +20,8 @@ public class HelloAI {
 
 		int rtn = test.match(inputID, inputPW);
 		if(rtn != 0){
-			ST.showOnScreen("AI", test.getErrorCode());
-			ST.showOnScreen("AI", test.getErrorMessage());
+			APITool.showOnScreen("AI", test.getErrorCode());
+			APITool.showOnScreen("AI", test.getErrorMessage());
 			return;
 		}
 		
@@ -57,35 +59,35 @@ public class HelloAI {
 				
 				if(move == 0){ //up
 					if((Y - 1) < 0) continue;
-					if(!ST.CompareBitFlag(map[Y - 1][X], BitFlag.Path_Type)) continue; 
+					if(!APITool.CompareBitFlag(map[Y - 1][X], BitFlag.Path_Type)) continue; 
 					
 					NoMove = 1;
 					NextMove = BitFlag.Move_Up;
 				}
 				else if(move == 1){//down
 					if((Y + 1) >= map.length) continue;
-					if(!ST.CompareBitFlag(map[Y + 1][X], BitFlag.Path_Type)) continue;
+					if(!APITool.CompareBitFlag(map[Y + 1][X], BitFlag.Path_Type)) continue;
 					
 					NoMove = 0;
 					NextMove = BitFlag.Move_Down;
 				}
 				else if(move == 2){//right
 					if((X + 1) >= map[0].length) continue;
-					if(!ST.CompareBitFlag(map[Y][X + 1], BitFlag.Path_Type)) continue;
+					if(!APITool.CompareBitFlag(map[Y][X + 1], BitFlag.Path_Type)) continue;
 					
 					NoMove = 3;
 					NextMove = BitFlag.Move_Right;
 				}
 				else if(move == 3){//left
 					if((X - 1) < 0) continue;
-					if(!ST.CompareBitFlag(map[Y][X - 1], BitFlag.Path_Type)) continue;
+					if(!APITool.CompareBitFlag(map[Y][X - 1], BitFlag.Path_Type)) continue;
 					
 					NoMove = 2;
 					NextMove = BitFlag.Move_Left;
 				}
 				
 			}while(NextMove == -1);
-			ST.showOnScreen("AI", "Next move: " + NextMove);
+			APITool.showOnScreen("AI", "Next move: " + NextMove);
 			
 			int putBombFlag = 0;
 			
@@ -104,11 +106,11 @@ public class HelloAI {
 			if(test.isGameEnd()) break;
 		}
 		if(test.getErrorCode() == ErrorCode.Success){
-			ST.showOnScreen("AI", test.getGameResult());
+			APITool.showOnScreen("AI", test.getGameResult());
 		}
 		else{
-			ST.showOnScreen("AI", test.getErrorCode());
-			ST.showOnScreen("AI", test.getErrorMessage());
+			APITool.showOnScreen("AI", test.getErrorCode());
+			APITool.showOnScreen("AI", test.getErrorMessage());
 			
 		}
 		
