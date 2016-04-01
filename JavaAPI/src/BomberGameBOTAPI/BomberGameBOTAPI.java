@@ -106,6 +106,7 @@ public class BomberGameBOTAPI {
 		String PA = null;
 		String PB = null;//★☆
 		String Number[] = new String[10];
+		String BombRange = null;
 		
 		try {
 			Wall = new String("▉".getBytes("UTF-8"), Charset.forName("UTF-8"));
@@ -113,38 +114,41 @@ public class BomberGameBOTAPI {
 			Bomb = new String("◎".getBytes("UTF-8"), Charset.forName("UTF-8"));
 			
 			PA = new String("★".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			PB = new String("☆".getBytes("UTF-8"), Charset.forName("UTF-8"));//✪
+			PB = new String("☆".getBytes("UTF-8"), Charset.forName("UTF-8"));
 			
-			Number[1] = new String("１".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			Number[2] = new String("２".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			Number[3] = new String("３".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			Number[4] = new String("４".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			Number[5] = new String("５".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			Number[6] = new String("６".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			Number[7] = new String("７".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			Number[8] = new String("８".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			Number[9] = new String("９".getBytes("UTF-8"), Charset.forName("UTF-8"));
+//			Number[1] = new String("１".getBytes("UTF-8"), Charset.forName("UTF-8"));
+//			Number[2] = new String("２".getBytes("UTF-8"), Charset.forName("UTF-8"));
+//			Number[3] = new String("３".getBytes("UTF-8"), Charset.forName("UTF-8"));
+//			Number[4] = new String("４".getBytes("UTF-8"), Charset.forName("UTF-8"));
+//			Number[5] = new String("５".getBytes("UTF-8"), Charset.forName("UTF-8"));
+//			Number[6] = new String("６".getBytes("UTF-8"), Charset.forName("UTF-8"));
+//			Number[7] = new String("７".getBytes("UTF-8"), Charset.forName("UTF-8"));
+//			Number[8] = new String("８".getBytes("UTF-8"), Charset.forName("UTF-8"));
+//			Number[9] = new String("９".getBytes("UTF-8"), Charset.forName("UTF-8"));
+			
+			BombRange = new String("⿴".getBytes("UTF-8"), Charset.forName("UTF-8"));
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.print(Number[1] + Number[2] + System.lineSeparator());
-	    for(int y = 0 ; y < map.length ; y++){
-			for(int x = 0 ; x < map[0].length ; x++){
+	    for(int[] y : map){
+			for(int EachMap : y){
 				
-				if(APITool.CompareBitFlag(map[y][x], BitFlag.PlayerA))			System.out.print(PA);
-				else if(APITool.CompareBitFlag(map[y][x], BitFlag.PlayerB)) 		System.out.print(PB);
-				else if(APITool.CompareBitFlag(map[y][x], BitFlag.Bomb_Type)) 	System.out.print(Bomb);
-				else if((map[y][x] & 0xF) == 0x1)	System.out.print(Number[1]);
-				else if((map[y][x] & 0xF) == 0x2)	System.out.print(Number[2]);
-				else if((map[y][x] & 0xF) == 0x3)	System.out.print(Number[3]);
-				else if((map[y][x] & 0xF) == 0x4)	System.out.print(Number[4]);
-				else if((map[y][x] & 0xF) == 0x5)	System.out.print(Number[5]);
-				else if((map[y][x] & 0xF) == 0x6)	System.out.print(Number[6]);
-				else if((map[y][x] & 0xF) == 0x7)	System.out.print(Number[7]);
-				else if((map[y][x] & 0xF) == 0x8)	System.out.print(Number[8]);
-				else if(APITool.CompareBitFlag(map[y][x], BitFlag.Path_Type)) 	System.out.print(Path);
-				else if(APITool.CompareBitFlag(map[y][x], BitFlag.Wall_Type)) 	System.out.print(Wall);
+				if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerA))			System.out.print(PA);
+				else if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerB)) 		System.out.print(PB);
+				else if(APITool.CompareBitFlag(EachMap, BitFlag.Bomb_Type)) 	System.out.print(Bomb);
+				else if((EachMap & 0xF) >= 0x0) 								System.out.print(BombRange);
+//				else if((EachMap & 0xF) == 0x1)	System.out.print(Number[1]);
+//				else if((EachMap & 0xF) == 0x2)	System.out.print(Number[2]);
+//				else if((EachMap & 0xF) == 0x3)	System.out.print(Number[3]);
+//				else if((EachMap & 0xF) == 0x4)	System.out.print(Number[4]);
+//				else if((EachMap & 0xF) == 0x5)	System.out.print(Number[5]);
+//				else if((EachMap & 0xF) == 0x6)	System.out.print(Number[6]);
+//				else if((EachMap & 0xF) == 0x7)	System.out.print(Number[7]);
+//				else if((EachMap & 0xF) == 0x8)	System.out.print(Number[8]);
+				else if(APITool.CompareBitFlag(EachMap, BitFlag.Path_Type)) 	System.out.print(Path);
+				else if(APITool.CompareBitFlag(EachMap, BitFlag.Wall_Type)) 	System.out.print(Wall);
 				else System.out.print(Wall);
 				
 			}
@@ -193,18 +197,18 @@ public class BomberGameBOTAPI {
 	} 
 	private boolean connect(){
 		
-		for(int i = 0 ; i < APIOptions.PortList.length ; i++){
+		for(int port : APIOptions.PortList){
 			
 //			ST.showOnScreen(LogName, "Connect to port " + PortList[i]);
 		    try{
 		    	Client = SocketFactory.getDefault().createSocket();
-		    	InetSocketAddress remoteaddr = new InetSocketAddress(APIOptions.ServerIP, APIOptions.PortList[i]);
+		    	InetSocketAddress remoteaddr = new InetSocketAddress(APIOptions.ServerIP, port);
 		    	Client.connect(remoteaddr, 2000);
 		    	Reader = new BufferedReader(new InputStreamReader(Client.getInputStream(), "UTF-8"));
 		    	Writer = new BufferedWriter(new OutputStreamWriter(Client.getOutputStream(), "UTF-8"));
 		    }
 		    catch (IOException e){
-		    	APITool.showOnScreen(LogName, "Connect prot " + APIOptions.PortList[i] + " time out");
+		    	APITool.showOnScreen(LogName, "Connect prot " + port + " time out");
 		    	continue;
 		    }
 		    break;
@@ -243,6 +247,18 @@ public class BomberGameBOTAPI {
 	public static void main(String[] args) {
 		
 		System.out.println("BomberGameBOTAPI v " + BomberGameBOTAPI.version);
-		
+		try {
+			String Test = new String("◯".getBytes("UTF-8"), Charset.forName("UTF-8"));
+			System.out.println(Test);
+			Test = new String("○".getBytes("UTF-8"), Charset.forName("UTF-8"));
+			System.out.println(Test);
+			Test = new String("◇".getBytes("UTF-8"), Charset.forName("UTF-8"));
+			System.out.println(Test);
+			Test = new String("◆".getBytes("UTF-8"), Charset.forName("UTF-8"));
+			System.out.println(Test);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
