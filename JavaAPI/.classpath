@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry excluding="APIObjectStructure/Message.java" kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="/BomberGameBOTServer/BomberGameBOTServer.jar"/>
+	<classpathentry kind="lib" path="Library/lanterna-2.1.7.jar"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

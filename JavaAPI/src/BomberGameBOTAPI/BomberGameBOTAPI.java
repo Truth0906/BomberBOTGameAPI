@@ -11,6 +11,12 @@ import java.net.Socket;
 import java.nio.charset.Charset;
 
 import javax.net.SocketFactory;
+import javax.smartcardio.TerminalFactory;
+
+import com.googlecode.lanterna.screen.Screen;
+import com.googlecode.lanterna.screen.ScreenCharacterStyle;
+import com.googlecode.lanterna.screen.ScreenWriter;
+import com.googlecode.lanterna.terminal.Terminal;
 
 import APIObjectStructure.APICenter;
 import APITool.APITool;
@@ -260,5 +266,90 @@ public class BomberGameBOTAPI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		Screen screen = new Screen(null);
+        screen.startScreen();
+
+        ScreenWriter writer = new ScreenWriter(screen);
+        writer.setForegroundColor(Terminal.Color.DEFAULT);
+        writer.setBackgroundColor(Terminal.Color.DEFAULT);
+        writer.drawString(10, 1, "Hello World");
+
+        writer.setForegroundColor(Terminal.Color.BLACK);
+        writer.setBackgroundColor(Terminal.Color.WHITE);
+        writer.drawString(11, 2, "Hello World");
+        writer.setForegroundColor(Terminal.Color.WHITE);
+        writer.setBackgroundColor(Terminal.Color.BLACK);
+        writer.drawString(12, 3, "Hello World");
+        writer.setForegroundColor(Terminal.Color.BLACK);
+        writer.setBackgroundColor(Terminal.Color.WHITE);
+        writer.drawString(13, 4, "Hello World", ScreenCharacterStyle.Bold);
+        writer.setForegroundColor(Terminal.Color.WHITE);
+        writer.setBackgroundColor(Terminal.Color.BLACK);
+        writer.drawString(14, 5, "Hello World", ScreenCharacterStyle.Bold);
+        writer.setForegroundColor(Terminal.Color.DEFAULT);
+        writer.setBackgroundColor(Terminal.Color.DEFAULT);
+        writer.drawString(15, 6, "Hello World", ScreenCharacterStyle.Bold);
+        writer.setForegroundColor(Terminal.Color.DEFAULT);
+        writer.setBackgroundColor(Terminal.Color.DEFAULT);
+        writer.drawString(16, 7, "Hello World");
+
+        writer.setForegroundColor(Terminal.Color.BLUE);
+        writer.setBackgroundColor(Terminal.Color.DEFAULT);
+        writer.drawString(10, 10, "Hello World");
+        writer.setForegroundColor(Terminal.Color.BLUE);
+        writer.setBackgroundColor(Terminal.Color.WHITE);
+        writer.drawString(11, 11, "Hello World");
+        writer.setForegroundColor(Terminal.Color.BLUE);
+        writer.setBackgroundColor(Terminal.Color.BLACK);
+        writer.drawString(12, 12, "Hello World");
+        writer.setForegroundColor(Terminal.Color.BLUE);
+        writer.setBackgroundColor(Terminal.Color.MAGENTA);
+        writer.drawString(13, 13, "Hello World");
+        writer.setForegroundColor(Terminal.Color.GREEN);
+        writer.setBackgroundColor(Terminal.Color.DEFAULT);
+        writer.drawString(14, 14, "Hello World");
+        writer.setForegroundColor(Terminal.Color.GREEN);
+        writer.setBackgroundColor(Terminal.Color.WHITE);
+        writer.drawString(15, 15, "Hello World");
+        writer.setForegroundColor(Terminal.Color.GREEN);
+        writer.setBackgroundColor(Terminal.Color.BLACK);
+        writer.drawString(16, 16, "Hello World");
+        writer.setForegroundColor(Terminal.Color.GREEN);
+        writer.setBackgroundColor(Terminal.Color.MAGENTA);
+        writer.drawString(17, 17, "Hello World");
+
+        writer.setForegroundColor(Terminal.Color.BLUE);
+        writer.setBackgroundColor(Terminal.Color.DEFAULT);
+        writer.drawString(10, 20, "Hello World", ScreenCharacterStyle.Bold);
+        writer.setForegroundColor(Terminal.Color.BLUE);
+        writer.setBackgroundColor(Terminal.Color.WHITE);
+        writer.drawString(11, 21, "Hello World", ScreenCharacterStyle.Bold);
+        writer.setForegroundColor(Terminal.Color.BLUE);
+        writer.setBackgroundColor(Terminal.Color.BLACK);
+        writer.drawString(12, 22, "Hello World", ScreenCharacterStyle.Bold);
+        writer.setForegroundColor(Terminal.Color.BLUE);
+        writer.setBackgroundColor(Terminal.Color.MAGENTA);
+        writer.drawString(13, 23, "Hello World", ScreenCharacterStyle.Bold);
+        writer.setForegroundColor(Terminal.Color.GREEN);
+        writer.setBackgroundColor(Terminal.Color.DEFAULT);
+        writer.drawString(14, 24, "Hello World", ScreenCharacterStyle.Bold);
+        writer.setForegroundColor(Terminal.Color.GREEN);
+        writer.setBackgroundColor(Terminal.Color.WHITE);
+        writer.drawString(15, 25, "Hello World", ScreenCharacterStyle.Bold);
+        writer.setForegroundColor(Terminal.Color.GREEN);
+        writer.setBackgroundColor(Terminal.Color.BLACK);
+        writer.drawString(16, 26, "Hello World", ScreenCharacterStyle.Bold);
+        writer.setForegroundColor(Terminal.Color.CYAN);
+        writer.setBackgroundColor(Terminal.Color.BLUE);
+        writer.drawString(17, 27, "Hello World", ScreenCharacterStyle.Bold);
+        screen.refresh();
+        
+        try
+        {
+            Thread.sleep(5000);
+        } catch (InterruptedException e)
+        {
+        }
+        screen.stopScreen();
 	}
 }
