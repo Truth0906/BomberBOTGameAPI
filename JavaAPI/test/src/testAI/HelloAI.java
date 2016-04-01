@@ -49,7 +49,9 @@ public class HelloAI {
 			int NextMove = -1;
 			
 			do{
-			
+				
+				if(args[1].equals("01")) break;
+				
 				move = rand.nextInt();
 				
 				if(move < 0) move = move * -1;
@@ -101,8 +103,8 @@ public class HelloAI {
 			else if(move == 2){
 				putBombFlag = BitFlag.putBombBeforeMove;
 			}
-			
-			test.move(inputID, inputPW, NextMove, putBombFlag);
+			if(args[1].equals("01")) test.move(inputID, inputPW, 0, 0);
+			else test.move(inputID, inputPW, NextMove, putBombFlag);
 			if(test.isGameEnd()) break;
 		}
 		if(test.getErrorCode() == ErrorCode.Success){

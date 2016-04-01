@@ -131,14 +131,17 @@ public class BomberGameBOTAPI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.print(Number[1] + Number[2] + System.lineSeparator());
+		String Buffer = "";
+		for(int i = 0 ; i < 10 ; i++) Buffer += System.lineSeparator();
+		Buffer += "You are " + (getPlayerMark() == BitFlag.PlayerA ? PA : PB);
+		Buffer += System.lineSeparator();
 	    for(int[] y : map){
 			for(int EachMap : y){
 				
-				if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerA))			System.out.print(PA);
-				else if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerB)) 		System.out.print(PB);
-				else if(APITool.CompareBitFlag(EachMap, BitFlag.Bomb_Type)) 	System.out.print(Bomb);
-				else if((EachMap & 0xF) > 0x0) 								System.out.print(BombRange);
+				if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerA))			Buffer += PA;
+				else if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerB)) 		Buffer += PB;
+				else if(APITool.CompareBitFlag(EachMap, BitFlag.Bomb_Type)) 	Buffer += Bomb;
+				else if((EachMap & 0xF) > 0x0) 								    Buffer += BombRange;
 //				else if((EachMap & 0xF) == 0x1)	System.out.print(Number[1]);
 //				else if((EachMap & 0xF) == 0x2)	System.out.print(Number[2]);
 //				else if((EachMap & 0xF) == 0x3)	System.out.print(Number[3]);
@@ -147,14 +150,14 @@ public class BomberGameBOTAPI {
 //				else if((EachMap & 0xF) == 0x6)	System.out.print(Number[6]);
 //				else if((EachMap & 0xF) == 0x7)	System.out.print(Number[7]);
 //				else if((EachMap & 0xF) == 0x8)	System.out.print(Number[8]);
-				else if(APITool.CompareBitFlag(EachMap, BitFlag.Path_Type)) 	System.out.print(Path);
-				else if(APITool.CompareBitFlag(EachMap, BitFlag.Wall_Type)) 	System.out.print(Wall);
-				else System.out.print(Wall);
+				else if(APITool.CompareBitFlag(EachMap, BitFlag.Path_Type)) 	Buffer += Path;
+				else if(APITool.CompareBitFlag(EachMap, BitFlag.Wall_Type)) 	Buffer += Wall;
+				else Buffer += Wall;
 				
 			}
-			System.out.print(System.lineSeparator());
+			Buffer += System.lineSeparator();
 		}
-	    
+	    System.out.print(Buffer);
 	}
 	public int getPlayerMark(){
 		return Integer.parseInt(LastMessage.getMsg(Message.PlayerMark));

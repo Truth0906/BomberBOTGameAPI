@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry excluding="APIObjectStructure/Message.java" kind="src" path="src"/>
-	<classpathentry kind="lib" path="E:/Git/BomberGameBOTServer/Output/BomberGameBOTServer.jar"/>
+	<classpathentry exported="true" kind="lib" path="Library/BomberGameBOTServer.jar"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="E:/Git/BomberGameBOTAPI/JavaAPI/Library/commons-codec-1.10.jar"/>
-	<classpathentry kind="lib" path="E:/Git/BomberGameBOTAPI/JavaAPI/Library/gson-2.6.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
