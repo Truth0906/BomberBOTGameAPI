@@ -140,19 +140,11 @@ public class BomberGameBOTAPI {
 				
 				if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerA))			Buffer += PA;
 				else if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerB)) 		Buffer += PB;
-				else if(APITool.CompareBitFlag(EachMap, BitFlag.Bomb_Type)) 	Buffer += Bomb;
+				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Bomb))Buffer += Bomb;
 				else if((EachMap & 0xF) > 0x0) 								    Buffer += BombRange;
-//				else if((EachMap & 0xF) == 0x1)	System.out.print(Number[1]);
-//				else if((EachMap & 0xF) == 0x2)	System.out.print(Number[2]);
-//				else if((EachMap & 0xF) == 0x3)	System.out.print(Number[3]);
-//				else if((EachMap & 0xF) == 0x4)	System.out.print(Number[4]);
-//				else if((EachMap & 0xF) == 0x5)	System.out.print(Number[5]);
-//				else if((EachMap & 0xF) == 0x6)	System.out.print(Number[6]);
-//				else if((EachMap & 0xF) == 0x7)	System.out.print(Number[7]);
-//				else if((EachMap & 0xF) == 0x8)	System.out.print(Number[8]);
-				else if(APITool.CompareBitFlag(EachMap, BitFlag.Path_Type)) 	Buffer += Path;
-				else if(APITool.CompareBitFlag(EachMap, BitFlag.Wall_Type)) 	Buffer += Wall;
-				else Buffer += Wall;
+				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Path)) 	Buffer += Path;
+				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Wall)) 	Buffer += Wall;
+				else Buffer += "?";
 				
 			}
 			Buffer += System.lineSeparator();

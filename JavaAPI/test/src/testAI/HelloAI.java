@@ -63,28 +63,28 @@ public class HelloAI {
 				
 				if(move == 0){ //up
 					if((Y - 1) < 0) continue;
-					if(!APITool.CompareBitFlag(map[Y - 1][X], BitFlag.Path_Type)) continue; 
+					if(!APITool.CompareBitFlag(map[Y - 1][X], BitFlag.BlockType_Path)) continue; 
 					
 					NoMove = 1;
 					NextMove = BitFlag.Move_Up;
 				}
 				else if(move == 1){//down
 					if((Y + 1) >= map.length) continue;
-					if(!APITool.CompareBitFlag(map[Y + 1][X], BitFlag.Path_Type)) continue;
+					if(!APITool.CompareBitFlag(map[Y + 1][X], BitFlag.BlockType_Path)) continue;
 					
 					NoMove = 0;
 					NextMove = BitFlag.Move_Down;
 				}
 				else if(move == 2){//right
 					if((X + 1) >= map[0].length) continue;
-					if(!APITool.CompareBitFlag(map[Y][X + 1], BitFlag.Path_Type)) continue;
+					if(!APITool.CompareBitFlag(map[Y][X + 1], BitFlag.BlockType_Path)) continue;
 					
 					NoMove = 3;
 					NextMove = BitFlag.Move_Right;
 				}
 				else if(move == 3){//left
 					if((X - 1) < 0) continue;
-					if(!APITool.CompareBitFlag(map[Y][X - 1], BitFlag.Path_Type)) continue;
+					if(!APITool.CompareBitFlag(map[Y][X - 1], BitFlag.BlockType_Path)) continue;
 					
 					NoMove = 2;
 					NextMove = BitFlag.Move_Left;

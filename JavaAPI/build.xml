@@ -9,8 +9,8 @@
 	  <pathelement location="." />
 	 </path>
   	<target name="compile" >
-  			<!--ant antfile="build.xml" dir="../../BomberGameBOTServer" />
-  			<copy file="../../BomberGameBOTServer/Output/BomberGameBOTServer.jar" tofile="./Library/BomberGameBOTServer.jar"/-->
+  			<ant antfile="build.xml" dir="../../BomberGameBOTServer" />
+  			<copy file="../../BomberGameBOTServer/Output/BomberGameBOTServer.jar" tofile="./Library/BomberGameBOTServer.jar"/>
   			<delete dir="./classes" />
   			<mkdir dir="./classes" />
   			<javac encoding="UTF-8" srcdir=".\src" destdir="./classes" target="1.7" deprecation="off" debug="true" includeantruntime="false">
