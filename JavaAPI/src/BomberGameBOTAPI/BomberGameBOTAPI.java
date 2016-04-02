@@ -13,6 +13,7 @@ import java.nio.charset.Charset;
 import javax.net.SocketFactory;
 
 import APIObjectStructure.APICenter;
+import APIObjectStructure.APIConsoleUI;
 import APITool.APITool;
 import ServerObjectStructure.BitFlag;
 import ServerObjectStructure.Message;
@@ -21,20 +22,26 @@ import ServerTool.ErrorCode;
 public class BomberGameBOTAPI {
 	
 	public static final String APIversion = "1.0.160402";
+	public static boolean isContinue = true;
 	
 	private BufferedWriter Writer;
 	private BufferedReader Reader;
 	private Socket Client;
-
+	
+	private String ID;
+	private String Password;
+	
 	private int map[][];
 	private Message LastMessage;
 	
 	private String LogName = "TestAPI";
 	
-	public BomberGameBOTAPI(){
+	public BomberGameBOTAPI(String inputID, String inputPW){
 	    Writer = null;
 	    Reader = null;
 	    Client = null;
+	    ID = inputID;
+	    Password = inputPW;
 	    new APICenter();
 	}
 	
@@ -56,7 +63,7 @@ public class BomberGameBOTAPI {
     
 	    return LastMessage.getMsg("Message");
 	}
-	public int match(String inputID, String inputPW){
+	public int match(){
 	    
 	    if (!connect()) {
 	    	return getErrorCode();
@@ -65,17 +72,19 @@ public class BomberGameBOTAPI {
 	    Message Msg = new Message();
 	    
 	    Msg.setMsg(Message.FunctionName, "match");
-	    Msg.setMsg(Message.ID, inputID);
-	    Msg.setMsg(Message.Password, inputPW);
+	    Msg.setMsg(Message.ID, ID);
+	    Msg.setMsg(Message.Password, Password);
 	    
 	    sendMsg(Msg);
 	    LastMessage = receiveMsg();
 	    
-	    if(getErrorCode() == ErrorCode.Success) ParseMap();
+	    if(getErrorCode() == ErrorCode.Success) {
+	    	ParseMap();
+	    }
 	    
 	    return getErrorCode();
 	}
-	public int move(String inputID, String inputPW, int inputMove, int putBombFlag){
+	public int move(int inputMove, int putBombFlag){
 		
 		if (!connect()) {
 	    	return getErrorCode();
@@ -84,8 +93,8 @@ public class BomberGameBOTAPI {
 	    Message Msg = new Message();
 	    
 	    Msg.setMsg(Message.FunctionName, "move");
-	    Msg.setMsg(Message.ID, inputID);
-	    Msg.setMsg(Message.Password, inputPW);
+	    Msg.setMsg(Message.ID, ID);
+	    Msg.setMsg(Message.Password, Password);
 	    Msg.setMsg(Message.BombFlag, putBombFlag);
 	    Msg.setMsg(Message.Move, inputMove);
 	    
@@ -168,6 +177,10 @@ public class BomberGameBOTAPI {
 	}
 	public String getGameResult(){
 		return LastMessage.getMsg(Message.GameResult);
+	}
+	public void runConsole(){
+		final String inputID = ID;
+		APIConsoleUI.showUI(inputID);
 	}
 	private void ParseMap(){
 		String temp = LastMessage.getMsg(Message.Map);
