@@ -20,7 +20,7 @@ import ServerTool.ErrorCode;
 
 public class BomberGameBOTAPI {
 	
-	public static final String version = "1.0.1600401";
+	public static final String APIversion = "1.0.160402";
 	
 	private BufferedWriter Writer;
 	private BufferedReader Reader;
@@ -221,6 +221,8 @@ public class BomberGameBOTAPI {
 	}
 	private boolean sendMsg(Message inputMsg){
 		
+		inputMsg.setMsg(Message.APIVersion, APIversion);
+		
 		String Msg = APITool.MessageToString(inputMsg);
 		try {
 			Writer.write(Msg + "\r\n");
@@ -249,7 +251,7 @@ public class BomberGameBOTAPI {
 	}
 	public static void main(String[] args) {
 		
-		System.out.println("BomberGameBOTAPI v " + BomberGameBOTAPI.version);
+		System.out.println("BomberGameBOTAPI v " + BomberGameBOTAPI.APIversion);
 		
 	}
 }

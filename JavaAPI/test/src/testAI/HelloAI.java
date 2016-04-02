@@ -29,8 +29,10 @@ public class HelloAI {
 		int map[][];
 		SecureRandom rand = new SecureRandom();
 		int NoMove = -1;
+		
+		test.showMap();
+		
 		while(test.getErrorCode() == ErrorCode.Success){
-			test.showMap();
 			map = test.getMap();
 			
 			int Y = 0, X = 0;
@@ -105,6 +107,9 @@ public class HelloAI {
 			}
 			if(args[1].equals("01")) test.move(inputID, inputPW, 0, 0);
 			else test.move(inputID, inputPW, NextMove, putBombFlag);
+			
+			test.showMap();
+			
 			if(test.isGameEnd()) break;
 		}
 		if(test.getErrorCode() == ErrorCode.Success){
