@@ -29,8 +29,10 @@ public class HelloAI {
 		int map[][];
 		SecureRandom rand = new SecureRandom();
 		int NoMove = -1;
+		
+		test.showMap();
+		
 		while(test.getErrorCode() == ErrorCode.Success){
-			test.showMap();
 			map = test.getMap();
 			
 			int Y = 0, X = 0;
@@ -49,7 +51,9 @@ public class HelloAI {
 			int NextMove = -1;
 			
 			do{
-			
+				
+				if(args[1].equals("01")) break;
+				
 				move = rand.nextInt();
 				
 				if(move < 0) move = move * -1;
@@ -59,28 +63,28 @@ public class HelloAI {
 				
 				if(move == 0){ //up
 					if((Y - 1) < 0) continue;
-					if(!APITool.CompareBitFlag(map[Y - 1][X], BitFlag.Path_Type)) continue; 
+					if(!APITool.CompareBitFlag(map[Y - 1][X], BitFlag.BlockType_Path)) continue; 
 					
 					NoMove = 1;
 					NextMove = BitFlag.Move_Up;
 				}
 				else if(move == 1){//down
 					if((Y + 1) >= map.length) continue;
-					if(!APITool.CompareBitFlag(map[Y + 1][X], BitFlag.Path_Type)) continue;
+					if(!APITool.CompareBitFlag(map[Y + 1][X], BitFlag.BlockType_Path)) continue;
 					
 					NoMove = 0;
 					NextMove = BitFlag.Move_Down;
 				}
 				else if(move == 2){//right
 					if((X + 1) >= map[0].length) continue;
-					if(!APITool.CompareBitFlag(map[Y][X + 1], BitFlag.Path_Type)) continue;
+					if(!APITool.CompareBitFlag(map[Y][X + 1], BitFlag.BlockType_Path)) continue;
 					
 					NoMove = 3;
 					NextMove = BitFlag.Move_Right;
 				}
 				else if(move == 3){//left
 					if((X - 1) < 0) continue;
-					if(!APITool.CompareBitFlag(map[Y][X - 1], BitFlag.Path_Type)) continue;
+					if(!APITool.CompareBitFlag(map[Y][X - 1], BitFlag.BlockType_Path)) continue;
 					
 					NoMove = 2;
 					NextMove = BitFlag.Move_Left;
@@ -101,8 +105,11 @@ public class HelloAI {
 			else if(move == 2){
 				putBombFlag = BitFlag.putBombBeforeMove;
 			}
+			if(args[1].equals("01")) test.move(inputID, inputPW, 0, 0);
+			else test.move(inputID, inputPW, NextMove, putBombFlag);
 			
-			test.move(inputID, inputPW, NextMove, putBombFlag);
+			test.showMap();
+			
 			if(test.isGameEnd()) break;
 		}
 		if(test.getErrorCode() == ErrorCode.Success){

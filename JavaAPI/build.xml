@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+	<project basedir="." default="jar" name="BomberGameBOTAPI">
+   	<path id="project-classpath">
+	  <pathelement location="." />
+	 </path>
+  	<target name="compile" >
+  			<ant antfile="build.xml" dir="../../BomberGameBOTServer" />
+  			<copy file="../../BomberGameBOTServer/Output/BomberGameBOTServer.jar" tofile="./Library/BomberGameBOTServer.jar"/>
+  			<delete dir="./classes" />
+  			<mkdir dir="./classes" />
+  			<javac encoding="UTF-8" srcdir=".\src" destdir="./classes" target="1.7" deprecation="off" debug="true" includeantruntime="false">
+
+  				<classpath refid="project-classpath" />
+  				<classpath location="./Library/BomberGameBOTServer.jar" />
+  			</javac>
+
+  		</target>
+
+  		<target name="jar" description="Creates the JAR file in " depends="compile">
+  			<unzip src="./Library/BomberGameBOTServer.jar" dest="./classes">
+			  <patternset>
+			    <include name="**/*.class" />
+			  </patternset>
+			</unzip>
+  			<jar jarfile="./Output/BomberGameBOTApi.jar" basedir="./classes">
+  				<manifest>
+  					<attribute name="Main-Class" value="BomberGameBOTAPI.BomberGameBOTAPI" />
+  					<attribute name="Class-path" value="." />
+  				</manifest>
+  			</jar>
+
+  			<delete includeemptydirs="true">
+  				<fileset dir="./classes" includes="**/*" />
+  			</delete>
+  		</target>
+</project>
