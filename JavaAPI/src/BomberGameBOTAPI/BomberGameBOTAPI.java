@@ -11,12 +11,6 @@ import java.net.Socket;
 import java.nio.charset.Charset;
 
 import javax.net.SocketFactory;
-import javax.smartcardio.TerminalFactory;
-
-import com.googlecode.lanterna.screen.Screen;
-import com.googlecode.lanterna.screen.ScreenCharacterStyle;
-import com.googlecode.lanterna.screen.ScreenWriter;
-import com.googlecode.lanterna.terminal.Terminal;
 
 import APIObjectStructure.APICenter;
 import APITool.APITool;
@@ -26,7 +20,7 @@ import ServerTool.ErrorCode;
 
 public class BomberGameBOTAPI {
 	
-	public static final String version = "1.0.160320";
+	public static final String APIversion = "1.0.160402";
 	
 	private BufferedWriter Writer;
 	private BufferedReader Reader;
@@ -132,35 +126,30 @@ public class BomberGameBOTAPI {
 //			Number[8] = new String("８".getBytes("UTF-8"), Charset.forName("UTF-8"));
 //			Number[9] = new String("９".getBytes("UTF-8"), Charset.forName("UTF-8"));
 			
-			BombRange = new String("⿴".getBytes("UTF-8"), Charset.forName("UTF-8"));
+			BombRange = new String("○".getBytes("UTF-8"), Charset.forName("UTF-8"));
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.print(Number[1] + Number[2] + System.lineSeparator());
+		String Buffer = "";
+		for(int i = 0 ; i < 10 ; i++) Buffer += System.lineSeparator();
+		Buffer += "You are " + (getPlayerMark() == BitFlag.PlayerA ? PA : PB);
+		Buffer += System.lineSeparator();
 	    for(int[] y : map){
 			for(int EachMap : y){
 				
-				if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerA))			System.out.print(PA);
-				else if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerB)) 		System.out.print(PB);
-				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Bomb))System.out.print(Bomb);
-				else if((EachMap & 0xF) >= 0x0) 								System.out.print(BombRange);
-//				else if((EachMap & 0xF) == 0x1)	System.out.print(Number[1]);
-//				else if((EachMap & 0xF) == 0x2)	System.out.print(Number[2]);
-//				else if((EachMap & 0xF) == 0x3)	System.out.print(Number[3]);
-//				else if((EachMap & 0xF) == 0x4)	System.out.print(Number[4]);
-//				else if((EachMap & 0xF) == 0x5)	System.out.print(Number[5]);
-//				else if((EachMap & 0xF) == 0x6)	System.out.print(Number[6]);
-//				else if((EachMap & 0xF) == 0x7)	System.out.print(Number[7]);
-//				else if((EachMap & 0xF) == 0x8)	System.out.print(Number[8]);
-				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Path)) 	System.out.print(Path);
-				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Wall)) 	System.out.print(Wall);
-				else System.out.print(Wall);
+				if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerA))			Buffer += PA;
+				else if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerB)) 		Buffer += PB;
+				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Bomb))Buffer += Bomb;
+				else if((EachMap & 0xF) > 0x0) 								    Buffer += BombRange;
+				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Path)) 	Buffer += Path;
+				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Wall)) 	Buffer += Wall;
+				else Buffer += "?";
 				
 			}
-			System.out.print(System.lineSeparator());
+			Buffer += System.lineSeparator();
 		}
-	    
+	    System.out.print(Buffer);
 	}
 	public int getPlayerMark(){
 		return Integer.parseInt(LastMessage.getMsg(Message.PlayerMark));
@@ -224,6 +213,8 @@ public class BomberGameBOTAPI {
 	}
 	private boolean sendMsg(Message inputMsg){
 		
+		inputMsg.setMsg(Message.APIVersion, APIversion);
+		
 		String Msg = APITool.MessageToString(inputMsg);
 		try {
 			Writer.write(Msg + "\r\n");
@@ -252,104 +243,7 @@ public class BomberGameBOTAPI {
 	}
 	public static void main(String[] args) {
 		
-		System.out.println("BomberGameBOTAPI v " + BomberGameBOTAPI.version);
-		try {
-			String Test = new String("◯".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			System.out.println(Test);
-			Test = new String("○".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			System.out.println(Test);
-			Test = new String("◇".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			System.out.println(Test);
-			Test = new String("◆".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			System.out.println(Test);
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Screen screen = new Screen(null);
-        screen.startScreen();
-
-        ScreenWriter writer = new ScreenWriter(screen);
-        writer.setForegroundColor(Terminal.Color.DEFAULT);
-        writer.setBackgroundColor(Terminal.Color.DEFAULT);
-        writer.drawString(10, 1, "Hello World");
-
-        writer.setForegroundColor(Terminal.Color.BLACK);
-        writer.setBackgroundColor(Terminal.Color.WHITE);
-        writer.drawString(11, 2, "Hello World");
-        writer.setForegroundColor(Terminal.Color.WHITE);
-        writer.setBackgroundColor(Terminal.Color.BLACK);
-        writer.drawString(12, 3, "Hello World");
-        writer.setForegroundColor(Terminal.Color.BLACK);
-        writer.setBackgroundColor(Terminal.Color.WHITE);
-        writer.drawString(13, 4, "Hello World", ScreenCharacterStyle.Bold);
-        writer.setForegroundColor(Terminal.Color.WHITE);
-        writer.setBackgroundColor(Terminal.Color.BLACK);
-        writer.drawString(14, 5, "Hello World", ScreenCharacterStyle.Bold);
-        writer.setForegroundColor(Terminal.Color.DEFAULT);
-        writer.setBackgroundColor(Terminal.Color.DEFAULT);
-        writer.drawString(15, 6, "Hello World", ScreenCharacterStyle.Bold);
-        writer.setForegroundColor(Terminal.Color.DEFAULT);
-        writer.setBackgroundColor(Terminal.Color.DEFAULT);
-        writer.drawString(16, 7, "Hello World");
-
-        writer.setForegroundColor(Terminal.Color.BLUE);
-        writer.setBackgroundColor(Terminal.Color.DEFAULT);
-        writer.drawString(10, 10, "Hello World");
-        writer.setForegroundColor(Terminal.Color.BLUE);
-        writer.setBackgroundColor(Terminal.Color.WHITE);
-        writer.drawString(11, 11, "Hello World");
-        writer.setForegroundColor(Terminal.Color.BLUE);
-        writer.setBackgroundColor(Terminal.Color.BLACK);
-        writer.drawString(12, 12, "Hello World");
-        writer.setForegroundColor(Terminal.Color.BLUE);
-        writer.setBackgroundColor(Terminal.Color.MAGENTA);
-        writer.drawString(13, 13, "Hello World");
-        writer.setForegroundColor(Terminal.Color.GREEN);
-        writer.setBackgroundColor(Terminal.Color.DEFAULT);
-        writer.drawString(14, 14, "Hello World");
-        writer.setForegroundColor(Terminal.Color.GREEN);
-        writer.setBackgroundColor(Terminal.Color.WHITE);
-        writer.drawString(15, 15, "Hello World");
-        writer.setForegroundColor(Terminal.Color.GREEN);
-        writer.setBackgroundColor(Terminal.Color.BLACK);
-        writer.drawString(16, 16, "Hello World");
-        writer.setForegroundColor(Terminal.Color.GREEN);
-        writer.setBackgroundColor(Terminal.Color.MAGENTA);
-        writer.drawString(17, 17, "Hello World");
-
-        writer.setForegroundColor(Terminal.Color.BLUE);
-        writer.setBackgroundColor(Terminal.Color.DEFAULT);
-        writer.drawString(10, 20, "Hello World", ScreenCharacterStyle.Bold);
-        writer.setForegroundColor(Terminal.Color.BLUE);
-        writer.setBackgroundColor(Terminal.Color.WHITE);
-        writer.drawString(11, 21, "Hello World", ScreenCharacterStyle.Bold);
-        writer.setForegroundColor(Terminal.Color.BLUE);
-        writer.setBackgroundColor(Terminal.Color.BLACK);
-        writer.drawString(12, 22, "Hello World", ScreenCharacterStyle.Bold);
-        writer.setForegroundColor(Terminal.Color.BLUE);
-        writer.setBackgroundColor(Terminal.Color.MAGENTA);
-        writer.drawString(13, 23, "Hello World", ScreenCharacterStyle.Bold);
-        writer.setForegroundColor(Terminal.Color.GREEN);
-        writer.setBackgroundColor(Terminal.Color.DEFAULT);
-        writer.drawString(14, 24, "Hello World", ScreenCharacterStyle.Bold);
-        writer.setForegroundColor(Terminal.Color.GREEN);
-        writer.setBackgroundColor(Terminal.Color.WHITE);
-        writer.drawString(15, 25, "Hello World", ScreenCharacterStyle.Bold);
-        writer.setForegroundColor(Terminal.Color.GREEN);
-        writer.setBackgroundColor(Terminal.Color.BLACK);
-        writer.drawString(16, 26, "Hello World", ScreenCharacterStyle.Bold);
-        writer.setForegroundColor(Terminal.Color.CYAN);
-        writer.setBackgroundColor(Terminal.Color.BLUE);
-        writer.drawString(17, 27, "Hello World", ScreenCharacterStyle.Bold);
-        screen.refresh();
-        
-        try
-        {
-            Thread.sleep(5000);
-        } catch (InterruptedException e)
-        {
-        }
-        screen.stopScreen();
+		System.out.println("BomberGameBOTAPI v " + BomberGameBOTAPI.APIversion);
+		
 	}
 }
