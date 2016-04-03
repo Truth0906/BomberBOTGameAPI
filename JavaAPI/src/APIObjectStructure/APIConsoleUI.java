@@ -21,21 +21,22 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 public class APIConsoleUI{
 
 	private JFrame frmAaa;
-
+	private JLabel label;
 	/**
 	 * Launch the application.
 	 */
-	public static void showUI(final String inputID){
+	public static APIConsoleUI showUI(final String inputID){
+		final APIConsoleUI window = new APIConsoleUI(inputID);;
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					APIConsoleUI window = new APIConsoleUI(inputID);
 					window.frmAaa.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
+		return window;
 	}
 
 	/**
@@ -44,7 +45,9 @@ public class APIConsoleUI{
 	public APIConsoleUI(String inputID) {
 		initialize(inputID);
 	}
-	
+	public void setRounds(int inputRound){
+		label.setText("Play: " + inputRound + " round" + (inputRound == 0 ? "" : "s"));
+	}
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -55,37 +58,44 @@ public class APIConsoleUI{
 		frmAaa.setResizable(false);
 		frmAaa.setFont(new Font("Times New Roman", Font.ITALIC, 18));
 		frmAaa.setTitle("BomberGameAPI console UI v " + BomberGameBOTAPI.APIversion);
-		frmAaa.setBounds(100, 100, 384, 145);
+		frmAaa.setBounds(100, 100, 384, 191);
 		frmAaa.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		JButton btnStopWhenThe = new JButton("Stop when this match finished");
 		btnStopWhenThe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				BomberGameBOTAPI.isContinue = false;
+				frmAaa.dispose();
 			}
 		});
 		btnStopWhenThe.setFont(new Font("Times New Roman", Font.BOLD, 18));
 		
 		JLabel lblNewLabel = new JLabel("Player: " + inputID);
 		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 18));
+		
+		label = new JLabel("Play: 0 round");
+		label.setFont(new Font("Times New Roman", Font.BOLD, 18));
 		GroupLayout groupLayout = new GroupLayout(frmAaa.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addComponent(lblNewLabel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
-						.addComponent(btnStopWhenThe, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE))
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblNewLabel, GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
+						.addComponent(label, GroupLayout.PREFERRED_SIZE, 358, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnStopWhenThe, GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(groupLayout.createSequentialGroup()
+				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(label, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(btnStopWhenThe, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(128, Short.MAX_VALUE))
+					.addContainerGap(54, Short.MAX_VALUE))
 		);
 		frmAaa.getContentPane().setLayout(groupLayout);
 		setWindowLocation(frmAaa);

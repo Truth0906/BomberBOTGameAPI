@@ -21,7 +21,7 @@ import ServerTool.ErrorCode;
 
 public class BomberGameBOTAPI {
 	
-	public static final String APIversion = "1.0.160402";
+	public static final String APIversion = "1.0.160404";
 	public static boolean isContinue = true;
 	
 	private BufferedWriter Writer;
@@ -30,6 +30,9 @@ public class BomberGameBOTAPI {
 	
 	private String ID;
 	private String Password;
+	
+	private APIConsoleUI ConsoleUI; 
+	private int Round;
 	
 	private int map[][];
 	private Message LastMessage;
@@ -42,6 +45,7 @@ public class BomberGameBOTAPI {
 	    Client = null;
 	    ID = inputID;
 	    Password = inputPW;
+	    Round = 0;	    
 	    new APICenter();
 	}
 	
@@ -80,6 +84,8 @@ public class BomberGameBOTAPI {
 	    
 	    if(getErrorCode() == ErrorCode.Success) {
 	    	ParseMap();
+	    	ConsoleUI.setRounds(Round);
+	    	Round++;
 	    }
 	    
 	    return getErrorCode();
@@ -113,8 +119,7 @@ public class BomberGameBOTAPI {
 		String Bomb = null;
 		
 		String PA = null;
-		String PB = null;//★☆
-		String Number[] = new String[10];
+		String PB = null;
 		String BombRange = null;
 		
 		try {
@@ -124,16 +129,6 @@ public class BomberGameBOTAPI {
 			
 			PA = new String("★".getBytes("UTF-8"), Charset.forName("UTF-8"));
 			PB = new String("☆".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			
-//			Number[1] = new String("１".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			Number[2] = new String("２".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			Number[3] = new String("３".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			Number[4] = new String("４".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			Number[5] = new String("５".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			Number[6] = new String("６".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			Number[7] = new String("７".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			Number[8] = new String("８".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			Number[9] = new String("９".getBytes("UTF-8"), Charset.forName("UTF-8"));
 			
 			BombRange = new String("○".getBytes("UTF-8"), Charset.forName("UTF-8"));
 		} catch (UnsupportedEncodingException e) {
@@ -150,7 +145,7 @@ public class BomberGameBOTAPI {
 				if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerA))			Buffer += PA;
 				else if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerB)) 		Buffer += PB;
 				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Bomb))Buffer += Bomb;
-				else if((EachMap & 0xF) > 0x0) 								    Buffer += BombRange;
+				else if((EachMap & BitFlag.BlockType_BombCDFilter) > 0x0) 								    Buffer += BombRange;
 				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Path)) 	Buffer += Path;
 				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Wall)) 	Buffer += Wall;
 				else Buffer += "?";
@@ -180,7 +175,7 @@ public class BomberGameBOTAPI {
 	}
 	public void runConsole(){
 		final String inputID = ID;
-		APIConsoleUI.showUI(inputID);
+		ConsoleUI = APIConsoleUI.showUI(inputID);
 	}
 	private void ParseMap(){
 		String temp = LastMessage.getMsg(Message.Map);

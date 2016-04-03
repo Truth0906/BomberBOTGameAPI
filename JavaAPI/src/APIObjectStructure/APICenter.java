@@ -50,7 +50,6 @@ public class APICenter {
 			APITool.showOnScreen(LogName, "Error! write Option file fails");
 			return;
 		}
-		APITool.showOnScreen(LogName, "Write Option file success");
 	}
 	public void readOptions(){
 		
@@ -71,6 +70,6 @@ public class APICenter {
 				
 		APITool.StringToOption(OptionString);
 		writeOptions();
-		
+		APITool.showOnScreen(LogName, "Read Option file success");
 	}
 }
