@@ -8,7 +8,9 @@ How to connect server:
 
 	1. Click twice BomberBOTGameAPI.jar, then crate the option file
 	2. Edit ServerIP to the ip of your server
-
+	3. Design your AI import api.jar
+	4. Run it
+	
 How to build:
 
 	java api:
