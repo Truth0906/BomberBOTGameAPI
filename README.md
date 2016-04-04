@@ -2,18 +2,32 @@
 
    BomberBOTGameAPI is the client api of BomberGameServer that players can use BomberGameAPI to design their BomberGame AI.
 
-How build:
+JAVA API:
 
-    Windows:
+How to connect server:
 
-       Eclipse:
+	1. Click twice BomberBOTGameAPI.jar, then crate the option file
+	2. Edit ServerIP to the ip of your server
 
-          build.xml -> Right click -> Run as -> Ant build
+How to build:
 
-Change log:
+	java api:
 
-    20160404 Release new version sample ai
+	 Windows:
+
+		Eclipse:
+
+			 build.xml -> Right click -> Run as -> Ant build
+
+C API:
+
+	NOT release
+
+
+JAVA API Change log:
+
+	20160404 Release new version sample ai
     
-             Add console ui
+		Add console ui
 
-    20160402 Release 1.0.160402 beta
+	20160402 Release 1.0.160402 beta
