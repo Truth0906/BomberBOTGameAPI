@@ -13,17 +13,17 @@ public class HelloAI {
 	private int [][] map;
 	private int Y, X;
 	private int NextMove;
-	private boolean isOnBombRange;
+	private boolean isInBombRange;
 	
 	public HelloAI(BomberGameBOTAPI inputAPI){
 		API = inputAPI;
-		isOnBombRange = false;
+		isInBombRange = false;
 	}
 	public int NextMove(){
 		
 		map = API.getMap(); //Get the game map from server
 		UpdateAIStatus(); //Update the flags of AI, like isOnBombRange
-		if(isOnBombRange){
+		if(isInBombRange){
 			
 			//If player is in bomb range
 			//Player will find the nearest safe place and try to move to the nearest safe place
@@ -44,7 +44,7 @@ public class HelloAI {
 		//If player is in bomb range
 		//DO NOT put bomb
 		
-		if(isOnBombRange) return 0;
+		if(isInBombRange) return 0;
 		
 		//Randomly put bomb or not
 		
@@ -187,7 +187,8 @@ public class HelloAI {
 		}
 		//Update Location end
 		
-		isOnBombRange = (map[Y][X] & BitFlag.Move_Filter) > 0; 
+		//Update the player is in bomb range
+		isInBombRange = (map[Y][X] & BitFlag.Move_Filter) > 0; 
 		
 	}
 	private void randomlyMove(){
