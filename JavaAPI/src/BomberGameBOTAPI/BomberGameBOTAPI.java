@@ -13,6 +13,7 @@ import java.nio.charset.Charset;
 import javax.net.SocketFactory;
 
 import APIObjectStructure.APICenter;
+import APIObjectStructure.APIConsoleUI;
 import APITool.APITool;
 import ServerObjectStructure.BitFlag;
 import ServerObjectStructure.Message;
@@ -20,21 +21,31 @@ import ServerTool.ErrorCode;
 
 public class BomberGameBOTAPI {
 	
-	public static final String APIversion = "1.0.160402";
+	public static final String APIversion = "1.0.160404";
+	public static boolean isContinue = true;
 	
 	private BufferedWriter Writer;
 	private BufferedReader Reader;
 	private Socket Client;
-
+	
+	private String ID;
+	private String Password;
+	
+	private APIConsoleUI ConsoleUI; 
+	private int Round;
+	
 	private int map[][];
 	private Message LastMessage;
 	
 	private String LogName = "TestAPI";
 	
-	public BomberGameBOTAPI(){
+	public BomberGameBOTAPI(String inputID, String inputPW){
 	    Writer = null;
 	    Reader = null;
 	    Client = null;
+	    ID = inputID;
+	    Password = inputPW;
+	    Round = 0;	    
 	    new APICenter();
 	}
 	
@@ -56,7 +67,7 @@ public class BomberGameBOTAPI {
     
 	    return LastMessage.getMsg("Message");
 	}
-	public int match(String inputID, String inputPW){
+	public int match(){
 	    
 	    if (!connect()) {
 	    	return getErrorCode();
@@ -65,17 +76,21 @@ public class BomberGameBOTAPI {
 	    Message Msg = new Message();
 	    
 	    Msg.setMsg(Message.FunctionName, "match");
-	    Msg.setMsg(Message.ID, inputID);
-	    Msg.setMsg(Message.Password, inputPW);
+	    Msg.setMsg(Message.ID, ID);
+	    Msg.setMsg(Message.Password, Password);
 	    
 	    sendMsg(Msg);
 	    LastMessage = receiveMsg();
 	    
-	    if(getErrorCode() == ErrorCode.Success) ParseMap();
+	    if(getErrorCode() == ErrorCode.Success) {
+	    	ParseMap();
+	    	ConsoleUI.setRounds(Round);
+	    	Round++;
+	    }
 	    
 	    return getErrorCode();
 	}
-	public int move(String inputID, String inputPW, int inputMove, int putBombFlag){
+	public int move(int inputMove, int putBombFlag){
 		
 		if (!connect()) {
 	    	return getErrorCode();
@@ -84,8 +99,8 @@ public class BomberGameBOTAPI {
 	    Message Msg = new Message();
 	    
 	    Msg.setMsg(Message.FunctionName, "move");
-	    Msg.setMsg(Message.ID, inputID);
-	    Msg.setMsg(Message.Password, inputPW);
+	    Msg.setMsg(Message.ID, ID);
+	    Msg.setMsg(Message.Password, Password);
 	    Msg.setMsg(Message.BombFlag, putBombFlag);
 	    Msg.setMsg(Message.Move, inputMove);
 	    
@@ -104,8 +119,7 @@ public class BomberGameBOTAPI {
 		String Bomb = null;
 		
 		String PA = null;
-		String PB = null;//★☆
-		String Number[] = new String[10];
+		String PB = null;
 		String BombRange = null;
 		
 		try {
@@ -115,16 +129,6 @@ public class BomberGameBOTAPI {
 			
 			PA = new String("★".getBytes("UTF-8"), Charset.forName("UTF-8"));
 			PB = new String("☆".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			
-//			Number[1] = new String("１".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			Number[2] = new String("２".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			Number[3] = new String("３".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			Number[4] = new String("４".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			Number[5] = new String("５".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			Number[6] = new String("６".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			Number[7] = new String("７".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			Number[8] = new String("８".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			Number[9] = new String("９".getBytes("UTF-8"), Charset.forName("UTF-8"));
 			
 			BombRange = new String("○".getBytes("UTF-8"), Charset.forName("UTF-8"));
 		} catch (UnsupportedEncodingException e) {
@@ -141,7 +145,7 @@ public class BomberGameBOTAPI {
 				if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerA))			Buffer += PA;
 				else if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerB)) 		Buffer += PB;
 				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Bomb))Buffer += Bomb;
-				else if((EachMap & 0xF) > 0x0) 								    Buffer += BombRange;
+				else if((EachMap & BitFlag.BlockType_BombCDFilter) > 0x0) 								    Buffer += BombRange;
 				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Path)) 	Buffer += Path;
 				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Wall)) 	Buffer += Wall;
 				else Buffer += "?";
@@ -168,6 +172,10 @@ public class BomberGameBOTAPI {
 	}
 	public String getGameResult(){
 		return LastMessage.getMsg(Message.GameResult);
+	}
+	public void runConsole(){
+		final String inputID = ID;
+		ConsoleUI = APIConsoleUI.showUI(inputID);
 	}
 	private void ParseMap(){
 		String temp = LastMessage.getMsg(Message.Map);
