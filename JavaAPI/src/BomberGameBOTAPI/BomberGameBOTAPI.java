@@ -250,7 +250,7 @@ public class BomberGameBOTAPI {
 		return resultMsg;
 	}
 	public static void main(String[] args) {
-		
+		new APICenter();
 		System.out.println("BomberGameBOTAPI v " + BomberGameBOTAPI.APIversion);
 		
 	}
