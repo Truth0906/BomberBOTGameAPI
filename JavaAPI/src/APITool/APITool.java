@@ -1,8 +1,10 @@
 package APITool;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 import org.apache.commons.codec.DecoderException;
@@ -10,6 +12,7 @@ import org.apache.commons.codec.binary.Hex;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import BomberGameBOTAPI.APIOptions;
 import ServerObjectStructure.Block;
@@ -155,5 +158,13 @@ public class APITool {
 	public static int abs(int input){
 		if(input < 0) return -1 * input;
 		return input;
+	}
+	public static HashMap<String, Integer> StringToScoreMap(String inputString){
+		Gson gson = new Gson();
+		
+		Type ScoreMapType = new TypeToken<HashMap<String, Integer>>(){}.getType();
+		HashMap<String, Integer> result = gson.fromJson(inputString, ScoreMapType);
+		
+		return result;
 	}
 }
