@@ -14,7 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import BomberGameBOTAPI.APIOptions;
+import BomberBOTGameAPI.APIOptions;
 import ServerObjectStructure.Block;
 import ServerObjectStructure.Message;
 import ServerObjectStructure.Player;

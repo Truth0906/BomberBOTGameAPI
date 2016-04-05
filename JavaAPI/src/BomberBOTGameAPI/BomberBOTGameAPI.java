@@ -1,4 +1,4 @@
-package BomberGameBOTAPI;
+package BomberBOTGameAPI;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -22,7 +22,7 @@ import ServerObjectStructure.BitFlag;
 import ServerObjectStructure.Message;
 import ServerTool.ErrorCode;
 
-public class BomberGameBOTAPI {
+public class BomberBOTGameAPI {
 	
 	public static final String APIversion = "1.0.160404";
 	public static boolean isContinue = true;
@@ -44,7 +44,7 @@ public class BomberGameBOTAPI {
 	
 	private String LogName = "BomberGameBOTAPI";
 	
-	public BomberGameBOTAPI(String inputID, String inputPW){
+	public BomberBOTGameAPI(String inputID, String inputPW){
 	    Writer = null;
 	    Reader = null;
 	    Client = null;
@@ -312,7 +312,7 @@ public class BomberGameBOTAPI {
 	}
 	public static void main(String[] args) {
 		new APICenter();
-		System.out.println("BomberGameBOTAPI v " + BomberGameBOTAPI.APIversion);
+		System.out.println("BomberGameBOTAPI v " + BomberBOTGameAPI.APIversion);
 		
 	}
 }
