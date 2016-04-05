@@ -3,19 +3,19 @@ package testAI;
 import java.security.SecureRandom;
 
 import APITool.APITool;
-import BomberGameBOTAPI.BomberGameBOTAPI;
+import BomberBOTGameAPI.BomberBOTGameAPI;
 import ServerObjectStructure.BitFlag;
 import ServerTool.ErrorCode;
 
 
 public class HelloAI {
-	private BomberGameBOTAPI API;
+	private BomberBOTGameAPI API;
 	private int [][] map;
 	private int Y, X;
 	private int NextMove;
 	private boolean isInBombRange;
 	
-	public HelloAI(BomberGameBOTAPI inputAPI){
+	public HelloAI(BomberBOTGameAPI inputAPI){
 		API = inputAPI;
 		isInBombRange = false;
 	}
@@ -73,13 +73,13 @@ public class HelloAI {
 			inputPW = args[1];
 		}
 		
-		BomberGameBOTAPI API = new BomberGameBOTAPI(inputID, inputPW);
+		BomberBOTGameAPI API = new BomberBOTGameAPI(inputID, inputPW);
 		
 		HelloAI AI = new HelloAI(API);
 		
 		API.runConsole();
 		
-		while(BomberGameBOTAPI.isContinue){
+		while(BomberBOTGameAPI.isContinue){
 			
 			int rtn = API.match();
 			if(rtn != 0){

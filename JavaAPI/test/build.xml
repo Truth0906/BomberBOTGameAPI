@@ -5,7 +5,7 @@
               directory with the processing instruction <?eclipse.ant.import?>
               as the first entry and export the buildfile again. -->
 
-    <project basedir="." default="jar" name="testAPI">
+    <project basedir="." default="jar" name="BomberBOTGameAPI_testAPI">
               	
   	<path id="project-classpath">
   		<pathelement location="." />
@@ -19,13 +19,13 @@
   			<javac encoding="UTF-8" srcdir=".\src" destdir="./classes" target="1.7" deprecation="off" debug="true" includeantruntime="false">
 
   				<classpath refid="project-classpath" />
-  				<classpath location="../Output/BomberGameBOTApi.jar" />
+  				<classpath location="../Output/BomberBOTGameAPI.jar" />
   			</javac>
 
   		</target>
 
   		<target name="jar" description="Creates the JAR file in " depends="compile">
-  			<unzip src="../Output/BomberGameBOTApi.jar" dest="./classes">
+  			<unzip src="../Output/BomberBOTGameAPI.jar" dest="./classes">
   			  <patternset>
   			    <include name="**/*.class" />
   			  </patternset>

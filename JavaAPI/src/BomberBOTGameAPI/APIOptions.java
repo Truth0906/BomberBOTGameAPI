@@ -1,4 +1,4 @@
-package BomberGameBOTAPI;
+package BomberBOTGameAPI;
 
 public class APIOptions {
 	public static String ServerIP = "127.0.0.1";

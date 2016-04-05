@@ -1,4 +1,4 @@
-package BomberGameBOTAPI;
+package BomberBOTGameAPI;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,6 +9,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import javax.net.SocketFactory;
 
@@ -19,7 +22,7 @@ import ServerObjectStructure.BitFlag;
 import ServerObjectStructure.Message;
 import ServerTool.ErrorCode;
 
-public class BomberGameBOTAPI {
+public class BomberBOTGameAPI {
 	
 	public static final String APIversion = "1.0.160404";
 	public static boolean isContinue = true;
@@ -36,16 +39,18 @@ public class BomberGameBOTAPI {
 	
 	private int map[][];
 	private Message LastMessage;
+	private ArrayList<String> SortedID;
+	private ArrayList<Integer> SortedScore;
 	
-	private String LogName = "TestAPI";
+	private String LogName = "BomberGameBOTAPI";
 	
-	public BomberGameBOTAPI(String inputID, String inputPW){
+	public BomberBOTGameAPI(String inputID, String inputPW){
 	    Writer = null;
 	    Reader = null;
 	    Client = null;
 	    ID = inputID;
 	    Password = inputPW;
-	    Round = 0;	    
+	    Round = 0;
 	    new APICenter();
 	}
 	
@@ -59,13 +64,13 @@ public class BomberGameBOTAPI {
 	    
 	    Message Msg = new Message();
 	    
-	    Msg.setMsg("FunctionName", "echo");
-	    Msg.setMsg("Message", inputString);
+	    Msg.setMsg(Message.FunctionName, "echo");
+	    Msg.setMsg(Message.Message, inputString);
 	    
 	    sendMsg(Msg);
 	    LastMessage = receiveMsg();
     
-	    return LastMessage.getMsg("Message");
+	    return LastMessage.getMsg(Message.Message);
 	}
 	public int match(){
 	    
@@ -110,6 +115,62 @@ public class BomberGameBOTAPI {
 	    if(getErrorCode() == ErrorCode.Success) ParseMap();
 	    
 	    return getErrorCode();
+	}
+	public int query(){
+		return query(null);
+	}
+	public int query(String inputID){
+		
+		if (!connect()) {
+	    	return getErrorCode();
+	    }
+	    
+	    Message Msg = new Message();
+	    
+	    Msg.setMsg(Message.FunctionName, "query");
+	    Msg.setMsg(Message.ID, ID);
+	    Msg.setMsg(Message.Password, Password);
+	    
+	    sendMsg(Msg);
+	    LastMessage = receiveMsg();
+	    
+	    if(getErrorCode() != ErrorCode.Success) return getErrorCode(); 
+	    
+	    String ScoreMapString = LastMessage.getMsg(Message.ScoreMap);
+	    
+	    SortedID = new ArrayList<String>();
+	    SortedScore = new ArrayList<Integer>();
+	    
+	    HashMap<String, Integer> ScoreMap = APITool.StringToScoreMap(ScoreMapString);
+	    
+	    for(Entry<String, Integer> EachPlayer : ScoreMap.entrySet()){
+	    	SortedID.add(EachPlayer.getKey());
+	    	SortedScore.add(EachPlayer.getValue());
+	    }
+	    
+	    for (int i = 1; i < SortedScore.size(); i++) {
+	        
+	    	int ScoreKey = SortedScore.get(i);
+	    	String IDKey = SortedID.get(i);
+	        
+	        int j = i;
+	        while((j > 0) && (SortedScore.get(j - 1) < ScoreKey)) {
+	        	SortedScore.set(j, SortedScore.get(j - 1));
+	        	SortedID.set(j, SortedID.get(j - 1));
+	            j--;
+	        }
+	        SortedScore.set(j,ScoreKey);
+	        SortedID.set(j, IDKey);
+	    }
+	    for (int i = 0; i < SortedScore.size(); i++) {
+	    	
+	    	if(inputID != null && inputID.length() != 0){
+	    		if(!SortedID.get(i).equals(inputID)) continue;
+	    	}
+	    	APITool.showOnScreen(LogName, (i + 1) + ". " + SortedID.get(i) + " " + SortedScore.get(i));
+	    }
+	    
+	    return ErrorCode.Success;
 	}
 	public void showMap(){
 		
@@ -250,8 +311,8 @@ public class BomberGameBOTAPI {
 		return resultMsg;
 	}
 	public static void main(String[] args) {
-		
-		System.out.println("BomberGameBOTAPI v " + BomberGameBOTAPI.APIversion);
+		new APICenter();
+		System.out.println("BomberGameBOTAPI v " + BomberBOTGameAPI.APIversion);
 		
 	}
 }
