@@ -4,19 +4,17 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-
-import BomberGameBOTAPI.BomberGameBOTAPI;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.Toolkit;
-import java.awt.Window.Type;
-import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
+import BomberBOTGameAPI.BomberBOTGameAPI;
 
 public class APIConsoleUI{
 
@@ -57,14 +55,14 @@ public class APIConsoleUI{
 		frmAaa.setAlwaysOnTop(true);
 		frmAaa.setResizable(false);
 		frmAaa.setFont(new Font("Times New Roman", Font.ITALIC, 18));
-		frmAaa.setTitle("BomberGameAPI console UI v " + BomberGameBOTAPI.APIversion);
+		frmAaa.setTitle("BomberGameAPI console UI v " + BomberBOTGameAPI.APIversion);
 		frmAaa.setBounds(100, 100, 384, 191);
 		frmAaa.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		JButton btnStopWhenThe = new JButton("Stop when this match finished");
 		btnStopWhenThe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				BomberGameBOTAPI.isContinue = false;
+				BomberBOTGameAPI.isContinue = false;
 				frmAaa.dispose();
 			}
 		});

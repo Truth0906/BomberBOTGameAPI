@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import APITool.APITool;
-import BomberGameBOTAPI.APIOptions;
+import BomberBOTGameAPI.APIOptions;
 
 public class APICenter {
 	

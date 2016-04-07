@@ -4,32 +4,32 @@
               To include a user specific buildfile here, simply create one in the same
               directory with the processing instruction <?eclipse.ant.import?>
               as the first entry and export the buildfile again. -->
-	<project basedir="." default="jar" name="BomberGameBOTAPI">
+	<project basedir="." default="jar" name="BomberBOTGameAPI">
    	<path id="project-classpath">
 	  <pathelement location="." />
 	 </path>
   	<target name="compile" >
-  			<ant antfile="build.xml" dir="../../BomberGameBOTServer" />
-  			<copy file="../../BomberGameBOTServer/Output/BomberGameBOTServer.jar" tofile="./Library/BomberGameBOTServer.jar"/>
+  			<ant antfile="build.xml" dir="../../BomberBOTGameServer" />
+  			<copy file="../../BomberBOTGameServer/Output/BomberBOTGameServer.jar" tofile="./Library/BomberBOTGameServer.jar"/>
   			<delete dir="./classes" />
   			<mkdir dir="./classes" />
   			<javac encoding="UTF-8" srcdir=".\src" destdir="./classes" target="1.7" deprecation="off" debug="true" includeantruntime="false">
 
   				<classpath refid="project-classpath" />
-  				<classpath location="./Library/BomberGameBOTServer.jar" />
+  				<classpath location="./Library/BomberBOTGameServer.jar" />
   			</javac>
 
   		</target>
 
   		<target name="jar" description="Creates the JAR file in " depends="compile">
-  			<unzip src="./Library/BomberGameBOTServer.jar" dest="./classes">
+  			<unzip src="./Library/BomberBOTGameServer.jar" dest="./classes">
 			  <patternset>
 			    <include name="**/*.class" />
 			  </patternset>
 			</unzip>
-  			<jar jarfile="./Output/BomberGameBOTApi.jar" basedir="./classes">
+  			<jar jarfile="./Output/BomberBOTGameAPI.jar" basedir="./classes">
   				<manifest>
-  					<attribute name="Main-Class" value="BomberGameBOTAPI.BomberGameBOTAPI" />
+  					<attribute name="Main-Class" value="BomberBOTGameAPI.BomberBOTGameAPI" />
   					<attribute name="Class-path" value="." />
   				</manifest>
   			</jar>
