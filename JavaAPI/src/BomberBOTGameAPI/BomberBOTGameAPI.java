@@ -304,8 +304,9 @@ public class BomberBOTGameAPI {
 			resultMsg = APITool.StringToMessage(receivedString);
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			resultMsg = new Message();
+			resultMsg.setMsg(Message.Message, "Server disconnect");
+			resultMsg.setMsg(Message.ErrorCode, ErrorCode.ConnectError);
 		}
 		
 		return resultMsg;
