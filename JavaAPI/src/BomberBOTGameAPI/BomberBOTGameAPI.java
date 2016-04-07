@@ -55,7 +55,7 @@ public class BomberBOTGameAPI {
 	}
 	
 	
-	public String echo(String inputString){
+	public synchronized String echo(String inputString){
 	    
 	    if (!connect()) {
 
@@ -72,7 +72,7 @@ public class BomberBOTGameAPI {
     
 	    return LastMessage.getMsg(Message.Message);
 	}
-	public int match(){
+	public synchronized int match(){
 	    
 	    if (!connect()) {
 	    	return getErrorCode();
@@ -95,7 +95,7 @@ public class BomberBOTGameAPI {
 	    
 	    return getErrorCode();
 	}
-	public int move(int inputMove, int putBombFlag){
+	public synchronized int move(int inputMove, int putBombFlag){
 		
 		if (!connect()) {
 	    	return getErrorCode();
@@ -119,7 +119,7 @@ public class BomberBOTGameAPI {
 	public int query(){
 		return query(null);
 	}
-	public int query(String inputID){
+	public synchronized int query(String inputID){
 		
 		if (!connect()) {
 	    	return getErrorCode();
@@ -172,7 +172,7 @@ public class BomberBOTGameAPI {
 	    
 	    return ErrorCode.Success;
 	}
-	public void showMap(){
+	public synchronized void showMap(){
 		
 		
 		String Wall = null;
@@ -216,25 +216,25 @@ public class BomberBOTGameAPI {
 		}
 	    System.out.print(Buffer);
 	}
-	public int getPlayerMark(){
+	public synchronized int getPlayerMark(){
 		return Integer.parseInt(LastMessage.getMsg(Message.PlayerMark));
 	}
-	public String getErrorMessage(){
+	public synchronized String getErrorMessage(){
 		return LastMessage.getMsg(Message.Message);
 	}
-	public int getErrorCode(){
+	public synchronized int getErrorCode(){
 		return Integer.parseInt(LastMessage.getMsg(Message.ErrorCode));
 	}
-	public int[][] getMap(){
+	public synchronized int[][] getMap(){
 		return map;
 	}
-	public boolean isGameEnd(){
+	public synchronized boolean isGameEnd(){
 		return Boolean.parseBoolean(LastMessage.getMsg(Message.End));
 	}
-	public String getGameResult(){
+	public synchronized String getGameResult(){
 		return LastMessage.getMsg(Message.GameResult);
 	}
-	public void runConsole(){
+	public synchronized void runConsole(){
 		final String inputID = ID;
 		ConsoleUI = APIConsoleUI.showUI(inputID);
 	}
