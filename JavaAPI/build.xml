@@ -9,20 +9,26 @@
 	  <pathelement location="." />
 	 </path>
   	<target name="compile" >
-  			<ant antfile="build.xml" dir="../../BomberBOTGameServer" />
-  			<copy file="../../BomberBOTGameServer/Output/BomberBOTGameServer.jar" tofile="./Library/BomberBOTGameServer.jar"/>
+  			<!--ant antfile="build.xml" dir="../../BomberBOTGameServer" />
+  			<copy file="../../BomberBOTGameServer/Output/BomberBOTGameServer.jar" tofile="./Library/BomberBOTGameServer.jar"/-->
   			<delete dir="./classes" />
   			<mkdir dir="./classes" />
   			<javac encoding="UTF-8" srcdir=".\src" destdir="./classes" target="1.7" deprecation="off" debug="true" includeantruntime="false">
 
   				<classpath refid="project-classpath" />
   				<classpath location="./Library/BomberBOTGameServer.jar" />
+  				<classpath location="./Library/lanterna-3.0.0-beta1.jar" />
   			</javac>
 
   		</target>
 
   		<target name="jar" description="Creates the JAR file in " depends="compile">
   			<unzip src="./Library/BomberBOTGameServer.jar" dest="./classes">
+			  <patternset>
+			    <include name="**/*.class" />
+			  </patternset>
+			</unzip>
+  			<unzip src="./Library/lanterna-3.0.0-beta1.jar" dest="./classes">
 			  <patternset>
 			    <include name="**/*.class" />
 			  </patternset>

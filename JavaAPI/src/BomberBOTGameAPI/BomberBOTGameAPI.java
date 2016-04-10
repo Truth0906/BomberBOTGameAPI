@@ -5,10 +5,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -17,14 +15,14 @@ import javax.net.SocketFactory;
 
 import APIObjectStructure.APICenter;
 import APIObjectStructure.APIConsoleUI;
+import APIObjectStructure.StateDisplay;
 import APITool.APITool;
-import ServerObjectStructure.BitFlag;
 import ServerObjectStructure.Message;
 import ServerTool.ErrorCode;
 
 public class BomberBOTGameAPI {
 	
-	public static final String APIversion = "1.0.160404";
+	public static final String APIversion = "1.0.160410";
 	public static boolean isContinue = true;
 	
 	private BufferedWriter Writer;
@@ -37,10 +35,12 @@ public class BomberBOTGameAPI {
 	private APIConsoleUI ConsoleUI; 
 	private int Round;
 	
-	private int map[][];
+	private int GameMap[][];
 	private Message LastMessage;
 	private ArrayList<String> SortedID;
 	private ArrayList<Integer> SortedScore;
+	private StateDisplay StateDisplay;
+	
 	
 	private String LogName = "BomberGameBOTAPI";
 	
@@ -52,9 +52,10 @@ public class BomberBOTGameAPI {
 	    Password = inputPW;
 	    Round = 0;
 	    new APICenter();
+	    StateDisplay = new StateDisplay(ID);
+	    new Thread(StateDisplay).start();
 	}
-	
-	
+		
 	public synchronized String echo(String inputString){
 	    
 	    if (!connect()) {
@@ -174,47 +175,48 @@ public class BomberBOTGameAPI {
 	}
 	public synchronized void showMap(){
 		
+		StateDisplay.udateGameMap(GameMap, getPlayerMark());
 		
-		String Wall = null;
-		String Path = null;
-		String Bomb = null;
-		
-		String PA = null;
-		String PB = null;
-		String BombRange = null;
-		
-		try {
-			Wall = new String("▉".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			Path = new String("　".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			Bomb = new String("◎".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			
-			PA = new String("★".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			PB = new String("☆".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			
-			BombRange = new String("○".getBytes("UTF-8"), Charset.forName("UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String Buffer = "";
-		for(int i = 0 ; i < 10 ; i++) Buffer += System.lineSeparator();
-		Buffer += "You are " + (getPlayerMark() == BitFlag.PlayerA ? PA : PB);
-		Buffer += System.lineSeparator();
-	    for(int[] y : map){
-			for(int EachMap : y){
-				
-				if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerA))			Buffer += PA;
-				else if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerB)) 		Buffer += PB;
-				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Bomb))Buffer += Bomb;
-				else if((EachMap & BitFlag.BlockType_BombCDFilter) > 0x0) 								    Buffer += BombRange;
-				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Path)) 	Buffer += Path;
-				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Wall)) 	Buffer += Wall;
-				else Buffer += "?";
-				
-			}
-			Buffer += System.lineSeparator();
-		}
-	    System.out.print(Buffer);
+//		String Wall = null;
+//		String Path = null;
+//		String Bomb = null;
+//		
+//		String PA = null;
+//		String PB = null;
+//		String BombRange = null;
+//		
+//		try {
+//			Wall = new String("▉".getBytes("UTF-8"), Charset.forName("UTF-8"));
+//			Path = new String("　".getBytes("UTF-8"), Charset.forName("UTF-8"));
+//			Bomb = new String("◎".getBytes("UTF-8"), Charset.forName("UTF-8"));
+//			
+//			PA = new String("★".getBytes("UTF-8"), Charset.forName("UTF-8"));
+//			PB = new String("☆".getBytes("UTF-8"), Charset.forName("UTF-8"));
+//			
+//			BombRange = new String("○".getBytes("UTF-8"), Charset.forName("UTF-8"));
+//		} catch (UnsupportedEncodingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		String Buffer = "";
+//		for(int i = 0 ; i < 10 ; i++) Buffer += System.lineSeparator();
+//		Buffer += "You are " + (getPlayerMark() == BitFlag.PlayerA ? PA : PB);
+//		Buffer += System.lineSeparator();
+//	    for(int[] y : GameMap){
+//			for(int EachMap : y){
+//				
+//				if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerA))			Buffer += PA;
+//				else if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerB)) 		Buffer += PB;
+//				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Bomb))Buffer += Bomb;
+//				else if((EachMap & BitFlag.BlockType_BombCDFilter) > 0x0) 								    Buffer += BombRange;
+//				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Path)) 	Buffer += Path;
+//				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Wall)) 	Buffer += Wall;
+//				else Buffer += "?";
+//				
+//			}
+//			Buffer += System.lineSeparator();
+//		}
+//	    System.out.print(Buffer);
 	}
 	public synchronized int getPlayerMark(){
 		return Integer.parseInt(LastMessage.getMsg(Message.PlayerMark));
@@ -226,7 +228,7 @@ public class BomberBOTGameAPI {
 		return Integer.parseInt(LastMessage.getMsg(Message.ErrorCode));
 	}
 	public synchronized int[][] getMap(){
-		return map;
+		return GameMap;
 	}
 	public synchronized boolean isGameEnd(){
 		return Boolean.parseBoolean(LastMessage.getMsg(Message.End));
@@ -247,14 +249,14 @@ public class BomberBOTGameAPI {
 		}
 		String tempMap[] = temp.split(" ");
 		
-		map = new int[ Integer.parseInt(tempMap[0]) ][Integer.parseInt(tempMap[1])];
+		GameMap = new int[ Integer.parseInt(tempMap[0]) ][Integer.parseInt(tempMap[1])];
 		    
 		int indexTemp = 2;
 		  
-		for(int y = 0 ; y < map.length ; y++){
-			for(int x = 0 ; x < map[0].length ; x++){
+		for(int y = 0 ; y < GameMap.length ; y++){
+			for(int x = 0 ; x < GameMap[0].length ; x++){
 					
-				map[y][x] = Integer.parseInt(tempMap[indexTemp++]);
+				GameMap[y][x] = Integer.parseInt(tempMap[indexTemp++]);
 				
 			}
 		}
@@ -311,7 +313,8 @@ public class BomberBOTGameAPI {
 		
 		return resultMsg;
 	}
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+		
 		new APICenter();
 		System.out.println("BomberGameBOTAPI v " + BomberBOTGameAPI.APIversion);
 		
