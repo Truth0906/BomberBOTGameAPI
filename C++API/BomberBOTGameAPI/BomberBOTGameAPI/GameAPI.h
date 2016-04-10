@@ -11,7 +11,7 @@ extern "C" {
 	
 	int connectServer(char *serverIP,  int Port, SOCKET *sclient);
 	int disConnectServer(SOCKET sclient );
-	int echo( SOCKET sclient, char *msg);
+	int echo( SOCKET sclient, char *msg, char **response);
 	int HexDecode(char *strHex, unsigned char **data, int *ldata);
 
 

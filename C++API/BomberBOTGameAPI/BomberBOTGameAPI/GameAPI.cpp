@@ -95,14 +95,17 @@ int disConnectServer(SOCKET sclient )
 	return 0;
 }
 
-int echo( SOCKET sclient, char *msg)
+int echo( SOCKET sclient, char *msg, char **response)
 {
-	 int rec = -1, i =0;
+	 int rec = -1; //receive bytes
+	 int rtn = -1, i =0;
 	 int datalen = 0;
 	 char * data = "{\"functionname\":\"6563686F\",\"message\":\"\"}\r\n";
 	 char *compose = NULL;
 	 char *hex = NULL;
 	 char recData[255]={0};
+
+	 if(response == NULL) goto end;	
 
 	 datalen += (int)strlen(data) + 1;
 	 if(msg){
@@ -121,13 +124,17 @@ int echo( SOCKET sclient, char *msg)
 	 send(sclient, compose, (int)strlen(compose), 0);
 
       rec = recv(sclient, recData, 254, 0);
-     if(rec > 0){
+     if(rec > 0){		 		  
          recData[rec] = 0x00;
-         printf(recData);
+		*response = (char*)calloc(rec+1,sizeof(char));
+		memcpy(*response, recData, rec);
+		 rtn = 0;
      }
+
+end:
 
 	if(compose) free(compose);
 	if(hex) free(hex);
 
-	return 0;
+	return rtn;
 }
