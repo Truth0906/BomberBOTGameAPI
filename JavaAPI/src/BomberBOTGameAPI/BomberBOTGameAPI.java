@@ -22,7 +22,7 @@ import ServerTool.ErrorCode;
 
 public class BomberBOTGameAPI {
 	
-	public static final String APIversion = "1.0.160410";
+	public static final String APIversion = "1.0.160417";
 	public static boolean isContinue = true;
 	
 	private BufferedWriter Writer;
@@ -54,6 +54,7 @@ public class BomberBOTGameAPI {
 	    new APICenter();
 	    StateDisplay = new StateDisplay(ID);
 	    new Thread(StateDisplay).start();
+	    
 	}
 		
 	public synchronized String echo(String inputString){
@@ -86,12 +87,23 @@ public class BomberBOTGameAPI {
 	    Msg.setMsg(Message.Password, Password);
 	    
 	    sendMsg(Msg);
+	    StateDisplay.updateState("Matching..");
 	    LastMessage = receiveMsg();
 	    
 	    if(getErrorCode() == ErrorCode.Success) {
 	    	ParseMap();
-	    	ConsoleUI.setRounds(Round);
-	    	Round++;
+	    	
+	    	int Win 	= Integer.parseInt(LastMessage.getMsg(Message.PlayerInfo_Wins));
+	    	int Losses 	= Integer.parseInt(LastMessage.getMsg(Message.PlayerInfo_Losses));
+	    	int Draw 	= Integer.parseInt(LastMessage.getMsg(Message.PlayerInfo_Draw));
+	    	int Score 	= Integer.parseInt(LastMessage.getMsg(Message.PlayerInfo_Score));
+	    	
+	    	StateDisplay.updatePlayerInformation(Win, Losses, Draw, Score, Round++);
+	    	
+	    	StateDisplay.updateState("Matching..success");
+	    }
+	    else{
+	    	StateDisplay.updateState("Matching..fail");
 	    }
 	    
 	    return getErrorCode();
@@ -113,7 +125,10 @@ public class BomberBOTGameAPI {
 	    sendMsg(Msg);
 	    LastMessage = receiveMsg();
 	    
-	    if(getErrorCode() == ErrorCode.Success) ParseMap();
+	    if(getErrorCode() == ErrorCode.Success) {
+	    	ParseMap();
+	    	StateDisplay.updateState("Playing");
+	    }
 	    
 	    return getErrorCode();
 	}
@@ -176,47 +191,7 @@ public class BomberBOTGameAPI {
 	public synchronized void showMap(){
 		
 		StateDisplay.udateGameMap(GameMap, getPlayerMark());
-		
-//		String Wall = null;
-//		String Path = null;
-//		String Bomb = null;
-//		
-//		String PA = null;
-//		String PB = null;
-//		String BombRange = null;
-//		
-//		try {
-//			Wall = new String("▉".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			Path = new String("　".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			Bomb = new String("◎".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			
-//			PA = new String("★".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			PB = new String("☆".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//			
-//			BombRange = new String("○".getBytes("UTF-8"), Charset.forName("UTF-8"));
-//		} catch (UnsupportedEncodingException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		String Buffer = "";
-//		for(int i = 0 ; i < 10 ; i++) Buffer += System.lineSeparator();
-//		Buffer += "You are " + (getPlayerMark() == BitFlag.PlayerA ? PA : PB);
-//		Buffer += System.lineSeparator();
-//	    for(int[] y : GameMap){
-//			for(int EachMap : y){
-//				
-//				if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerA))			Buffer += PA;
-//				else if(APITool.CompareBitFlag(EachMap, BitFlag.PlayerB)) 		Buffer += PB;
-//				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Bomb))Buffer += Bomb;
-//				else if((EachMap & BitFlag.BlockType_BombCDFilter) > 0x0) 								    Buffer += BombRange;
-//				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Path)) 	Buffer += Path;
-//				else if(APITool.CompareBitFlag(EachMap, BitFlag.BlockType_Wall)) 	Buffer += Wall;
-//				else Buffer += "?";
-//				
-//			}
-//			Buffer += System.lineSeparator();
-//		}
-//	    System.out.print(Buffer);
+
 	}
 	public synchronized int getPlayerMark(){
 		return Integer.parseInt(LastMessage.getMsg(Message.PlayerMark));
@@ -231,10 +206,14 @@ public class BomberBOTGameAPI {
 		return GameMap;
 	}
 	public synchronized boolean isGameEnd(){
-		return Boolean.parseBoolean(LastMessage.getMsg(Message.End));
+		boolean result = Boolean.parseBoolean(LastMessage.getMsg(Message.End)); 
+		if(result) StateDisplay.updateState("Game finish");
+		return result;
 	}
 	public synchronized String getGameResult(){
-		return LastMessage.getMsg(Message.GameResult);
+		String result = LastMessage.getMsg(Message.GameResult);
+		StateDisplay.updateState(result);
+		return result;
 	}
 	public synchronized void runConsole(){
 		final String inputID = ID;

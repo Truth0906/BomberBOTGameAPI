@@ -31,7 +31,7 @@ public class StateDisplay implements Runnable{
 	
 	private final int informationArea = 60;
 	private final int informationAreaShift = 1;
-	
+	private String initInformationArea = "";
 	//private int[][] GameMap;
 	private String ID;
 	
@@ -40,70 +40,13 @@ public class StateDisplay implements Runnable{
 	
 	public StateDisplay(String inputID){
 		ID = inputID;
-	}
-	public void udateGameMap(int inputGameMap[][], int inputPlayerMark){
 		
-		int basicY = 12 - inputGameMap.length /2;
-		int basicX = informationArea/2 - inputGameMap[0].length;
+		while(initInformationArea.length() < (80 - informationArea)) initInformationArea += " ";
 		
-		String Wall = null;
-		String Path = null;
-		String Bomb = null;
-		
-		String PA = null;
-		String PB = null;
-		String BombRange = null;
-		
+		Terminal terminal;
 		try {
-			Wall = new String("▉".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			Path = new String("　".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			Bomb = new String("◎".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			
-			PA = new String("A".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			PB = new String("B".getBytes("UTF-8"), Charset.forName("UTF-8"));
-			
-			BombRange = new String("○".getBytes("UTF-8"), Charset.forName("UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		Writer.setBackgroundColor(TextColor.ANSI.BLACK);
-		Writer.setForegroundColor(TextColor.ANSI.WHITE);
-	    for(int y = 0 ; y < inputGameMap.length ; y++){
-	    	
-	    	String MapLine = "";
-	    	
-			for(int x = 0 ; x <inputGameMap[0].length ; x++){
-				
-				if(APITool.CompareBitFlag(inputGameMap[y][x], BitFlag.PlayerA))			    MapLine += PA + " ";
-				else if(APITool.CompareBitFlag(inputGameMap[y][x], BitFlag.PlayerB)) 		MapLine += PB + " ";
-				else if(APITool.CompareBitFlag(inputGameMap[y][x], BitFlag.BlockType_Bomb)) MapLine += Bomb + " ";
-				else if((inputGameMap[y][x] & BitFlag.BlockType_BombCDFilter) > 0x0) 		MapLine += BombRange + " ";
-				else if(APITool.CompareBitFlag(inputGameMap[y][x], BitFlag.BlockType_Path)) MapLine += Path;
-				else if(APITool.CompareBitFlag(inputGameMap[y][x], BitFlag.BlockType_Wall)) MapLine += Wall + " ";
-				else MapLine += "?";
-				
-			}
-			
-			Writer.putString(basicX, basicY + y, MapLine);
-		}
-	    
-
-	    
-	    try {
-			screen.refresh();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	@Override
-	public void run() {
-		try {
-			// Setup terminal and screen layers
-	        Terminal terminal = new DefaultTerminalFactory().createTerminal();
-	        screen = new TerminalScreen(terminal);
+			terminal = new DefaultTerminalFactory().createTerminal();
+			screen = new TerminalScreen(terminal);
 	        screen.startScreen();
 	        screen.setCursorPosition(null);
 			Writer = screen.newTextGraphics();
@@ -126,12 +69,147 @@ public class StateDisplay implements Runnable{
 			Writer.putString(informationArea + informationAreaShift, 23, "API v " + BomberBOTGameAPI.APIversion);
 			
 			screen.refresh();
-
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
+	    updatePlayerInformation(0, 0, 0, 0, 0);
+	    updateState("Init success");
 	}
+	public void updatePlayerInformation(int inputWins, int inputLosses, int inputDraw, int inputScore, int inputRound){
+		Writer.setBackgroundColor(TextColor.ANSI.YELLOW);
+		Writer.setForegroundColor(TextColor.ANSI.BLACK);
+		
+		int line = 2;
+		Writer.putString(informationArea, line++, "Wins: ");
+		Writer.putString(informationArea + informationAreaShift, line, initInformationArea);
+		Writer.putString(informationArea + informationAreaShift, line++, "" + inputWins);
+		
+		Writer.putString(informationArea, line++, "Losses: ");
+		Writer.putString(informationArea + informationAreaShift, line, initInformationArea);
+		Writer.putString(informationArea + informationAreaShift, line++, "" + inputLosses);
+		
+		Writer.putString(informationArea, line++, "Game draw: ");
+		Writer.putString(informationArea + informationAreaShift, line, initInformationArea);
+		Writer.putString(informationArea + informationAreaShift, line++, "" + inputDraw);
+		
+		Writer.putString(informationArea, line++, "Score: ");
+		Writer.putString(informationArea + informationAreaShift, line, initInformationArea);
+		Writer.putString(informationArea + informationAreaShift, line++, "" + inputScore);
+		
+		line++;
+		Writer.putString(informationArea, line++, "Matched: ");
+		Writer.putString(informationArea + informationAreaShift, line, initInformationArea);
+		Writer.putString(informationArea + informationAreaShift, line++, "" + inputRound);
+		
+	    try {
+			screen.refresh();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void updateState(String inputState){
+		Writer.setBackgroundColor(TextColor.ANSI.YELLOW);
+		Writer.setForegroundColor(TextColor.ANSI.BLACK);
+		
+		int line = 13;
+		
+		Writer.putString(informationArea, line++, "State: ");
+		Writer.putString(informationArea + informationAreaShift, line, initInformationArea);
+		Writer.putString(informationArea + informationAreaShift, line++, inputState);
+		
+	    try {
+			screen.refresh();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void udateGameMap(int inputGameMap[][], int inputPlayerMark){
+		
+		int basicY = 12 - inputGameMap.length /2;
+		int basicX = informationArea/2 - inputGameMap[0].length;
+		
+		String Wall = null;
+		String Path = null;
+		String Bomb = null;
+		
+		String Me = null;
+		String Other = null;
+		String BombRange = null;
+		
+		try {
+			Wall = new String("▉".getBytes("UTF-8"), Charset.forName("UTF-8"));
+			Path = new String("　".getBytes("UTF-8"), Charset.forName("UTF-8"));
+			Bomb = new String("◎".getBytes("UTF-8"), Charset.forName("UTF-8"));
+			
+			Me = new String("O".getBytes("UTF-8"), Charset.forName("UTF-8"));
+			Other = new String("X".getBytes("UTF-8"), Charset.forName("UTF-8"));
+			
+			BombRange = new String("○".getBytes("UTF-8"), Charset.forName("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Writer.setBackgroundColor(TextColor.ANSI.BLACK);
+		Writer.setForegroundColor(TextColor.ANSI.WHITE);
+	    for(int y = 0 ; y < inputGameMap.length ; y++){
+	    	
+			for(int x = 0 ; x <inputGameMap[0].length ; x++){
+				
+				String Unit = null;
+				
+				if(APITool.CompareBitFlag(inputGameMap[y][x], inputPlayerMark)){
+					Unit = Me + " ";
+				}
+				else if((inputGameMap[y][x] & BitFlag.Player_Filter) != 0){
+					Unit = Other + " ";
+				}
+				else if(APITool.CompareBitFlag(inputGameMap[y][x], BitFlag.BlockType_Bomb)){
+					Unit = Bomb + " ";
+				}
+				else if((inputGameMap[y][x] & BitFlag.BlockType_BombCDFilter) > 0x0){
+					Writer.setBackgroundColor(TextColor.ANSI.RED);
+					Unit = "  ";
+				}
+				else if(APITool.CompareBitFlag(inputGameMap[y][x], BitFlag.BlockType_Path)){
+					Writer.setBackgroundColor(TextColor.ANSI.BLACK);
+					Unit = Path;
+				}
+				else if(APITool.CompareBitFlag(inputGameMap[y][x], BitFlag.BlockType_Wall)){
+					Writer.setBackgroundColor(TextColor.ANSI.BLACK);
+					Unit = Wall + " ";
+				}
+				else{
+					Unit = "? ";
+				}
+				
+				if(APITool.CompareBitFlag(inputGameMap[y][x], BitFlag.BlockType_Bomb)){
+					Writer.setBackgroundColor(TextColor.ANSI.RED);
+				}
+				else if((inputGameMap[y][x] & BitFlag.BlockType_BombCDFilter) > 0x0){
+					Writer.setBackgroundColor(TextColor.ANSI.RED);
+				}
+				else{
+					Writer.setBackgroundColor(TextColor.ANSI.BLACK);
+				}
+				
+				Writer.putString(basicX + (x * 2), basicY + y, Unit);
+			}
+			
+		}
+
+	    try {
+			screen.refresh();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	@Override
+	public void run() {}
 
 }
